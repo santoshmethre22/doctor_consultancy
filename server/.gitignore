@@ -1,0 +1,108 @@
+# Dependencies and package management
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm
+.yarn
+.pnp.*
+package-lock.json
+yarn.lock
+
+# Environment and configuration
+.env
+.env.*
+!.env.example
+config.local.js
+
+# Build and output directories
+dist/
+build/
+out/
+.output/
+coverage/
+*.tsbuildinfo
+
+# Logs and debugging
+logs/
+*.log
+debug.log*
+.debug/
+.nyc_output/
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime and process files
+pids/
+*.pid
+*.seed
+*.pid.lock
+.node_repl_history
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+*.sublime-*
+.project
+.classpath
+.settings/
+*.launch
+.history/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.temp/
+tmp/
+temp/
+
+# Application specific
+uploads/
+public/uploads/
+storage/
+media/
+assets/generated/
+
+# Test and coverage
+coverage/
+.nyc_output/
+.jest/
+jest.config.local.js
+
+# Development tools
+.eslintcache
+.stylelintcache
+.prettierignore
+.eslintignore
+*.local
+
+# Backup files
+*.bak
+*.backup
+*~
+*.swp
+
+# Security and keys
+*.pem
+*.key
+*.cert
+*.crt
+*.csr
+credentials.json
+.env.production

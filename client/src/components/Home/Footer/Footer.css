@@ -1,0 +1,88 @@
+.footer {
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 50px 20px 30px;
+    font-family: 'Segoe UI', sans-serif;
+    border-top: 1px solid #ddd;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .footer-row {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .footer-column {
+    flex: 1;
+  }
+  
+  .footer-logo h2 {
+    font-size: 24px;
+    color: #0077b6;
+    margin-bottom: 10px;
+  }
+  
+  .footer-logo p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .footer-links h4,
+  .footer-contact h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #0077b6;
+  }
+  
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-links ul li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-links ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-links ul li a:hover {
+    color: #0077b6;
+  }
+  
+  .footer-contact p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    font-size: 13px;
+    color: #777;
+    border-top: 1px solid #ccc;
+  }
+  
+  /* Responsive */
+  @media screen and (min-width: 768px) {
+    .footer-row {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
