@@ -1,9 +1,13 @@
 import React ,{useState} from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { useAuth } from "../../../context/user.context.jsx";
+
 const Navbar = () => {
     const isLoggedIn=true; // Replace with actual authentication logic
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+   // const { user ,logout} = useAuth(); // Assuming you have a user context or prop
+
     const user = {
       name: "John Doe",
       mobile: "+91 9876543210",
