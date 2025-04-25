@@ -8,7 +8,7 @@ export const AuthContext = createContext();
 
 // Create a custom axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // ✅ add base URL if needed
+  // ✅ add base URL if needed
   withCredentials: true,
 });
 
