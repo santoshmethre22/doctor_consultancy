@@ -1,26 +1,37 @@
  import mongoose from "mongoose";
 
 const hosipitalScheama=new mongoose.Schema({
-
         name:{
             type:String,
             required:true
         } ,
 
+        email:{
+            type:String,
+            required:true
+        },
+        password:{
+            type:String,
+            required:true
+        },
+
         doctors:[{
             
-            type:Object.modle.type,
-            required:true
+          type:mongoose.Schema.Types.ObjectId,
+          ref:"User"
             
         }],
 
+
         patient:[
-            {         
-                    type:Object.modle.type,
+        {         
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
                 
         }]
-
-        , location:{
+        , 
+        
+        location:{
                     type:String,
                     required:true
         }
