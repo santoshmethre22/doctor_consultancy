@@ -3,13 +3,13 @@ import { useAuth } from "../../context/user.context.jsx";
 import { useNavigate } from "react-router-dom";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { ClipLoader } from "react-spinners";
-
 import "./Login.css";
 
 const Login = ({ setShowLogin }) => {
-  const { login } = useAuth();
+  const { login,user } = useAuth();
   const navigate = useNavigate();
 
+  console.log(user);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -20,7 +20,8 @@ const Login = ({ setShowLogin }) => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleLogin = async (e) => {
@@ -28,15 +29,18 @@ const Login = ({ setShowLogin }) => {
     setLoading(true);
     setError("");
 
+    const { email, password, role } = formData; // ⭐ Correct
+
     try {
-      const res = await login(formData);
-      if (res?.payload?.success) {
+      const res = await login({ email, password, role });
+      if (res?.success) { // ⭐ Corrected - no payload
         navigate("/");
       } else {
-        setError(res?.payload?.message || "Login failed");
+        setError(res?.message || "Login failed");
       }
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      console.error("Login Error:", err);
+      setError(err?.response?.data?.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -75,7 +79,7 @@ const Login = ({ setShowLogin }) => {
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               required
-              placeholder="••••••••"
+              placeholder="password"
               value={formData.password}
               onChange={handleChange}
             />
@@ -108,12 +112,14 @@ const Login = ({ setShowLogin }) => {
           >
             {loading ? <ClipLoader color="#fff" size={20} /> : "Login"}
           </button>
+
+          
         </div>
 
         <div className="login-footer">
           <p>
             Don’t have an account?{" "}
-            <button type="button" onClick={() => setShowLogin(false)}>
+            <button type="button" onClick={() => navigate("/signup")}>
               Sign up
             </button>
           </p>

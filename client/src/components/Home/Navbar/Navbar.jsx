@@ -1,28 +1,20 @@
-import React ,{useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 import { useAuth } from "../../../context/user.context.jsx";
 
 const Navbar = () => {
-    const isLoggedIn=true; // Replace with actual authentication logic
-    const [showProfileMenu, setShowProfileMenu] = useState(false);
-   // const { user ,logout} = useAuth(); // Assuming you have a user context or prop
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const { user, isLoggedIn, logout } = useAuth();
 
-    const user = {
-      name: "John Doe",
-      mobile: "+91 9876543210",
-      avatar: "", // Put image URL here if available
-    };
-  
-    const toggleProfileMenu = () => {
-      setShowProfileMenu(!showProfileMenu);
-    };
+  const handleLogout = async () => {
+    await logout();
+    console.log('Successfully logged out');
+  };
 
-    const handleLogout=()=>{
-        
-
-    }
-
+  const toggleProfileMenu = () => {
+    setShowProfileMenu(!showProfileMenu);
+  };
 
   return (
     <nav className="navbar">
@@ -36,21 +28,18 @@ const Navbar = () => {
         <li><Link to="/about">About</Link></li>
         <li><Link to="/contact">Contact</Link></li>
 
-      {!isLoggedIn ?(
-
-        <>
-              <li><Link to="/login">Login</Link></li>
-              <li><Link to="/signup" className="signup-btn">Sign Up</Link></li>
-        </>
-
-      ):(
-        
+        {!isLoggedIn ? (
+          <>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/signup" className="signup-btn">Sign Up</Link></li>
+          </>
+        ) : (
           <li className="navbar-profile" onClick={toggleProfileMenu}>
             <div className="avatar">
-              {user.avatar ? (
+              {user?.avatar ? (
                 <img src={user.avatar} alt="Profile" />
               ) : (
-                <span>{user.name.charAt(0)}</span>
+                <span>{user?.name?.charAt(0) || "S"}</span>
               )}
             </div>
 
@@ -58,26 +47,27 @@ const Navbar = () => {
               <div className="profile-dropdown">
                 <div className="profile-header">
                   <div className="avatar-lg">
-                    {user.avatar ? (
+                    {user?.avatar ? (
                       <img src={user.avatar} alt="User" />
                     ) : (
-                      <span>{user.name.charAt(0)}</span>
+                      <span>{user?.name?.charAt(0) || "S"}</span>
                     )}
                   </div>
-                  <p className="profile-name">{user.name}</p>
-                  <p className="profile-mobile">{user.mobile}</p>
+                  <p className="profile-name">{user?.name}</p>
+                  <p className="profile-mobile">{user?.mobile}</p>
                 </div>
                 <hr />
-                <Link to="/profile">View Profile</Link>
-                <button onClick={handleLogout}>Logout</button>
+                <Link 
+                  to="/profile" 
+                  style={{ background: "blue", color: "white", padding: "5px 10px", borderRadius: "5px", textAlign: "center", display: "block", marginBottom: "10px" }}
+                >
+                  View Profile
+                </Link>
+                <button onClick={handleLogout} style={{ padding: "5px 10px", cursor: "pointer" }}>Logout</button>
               </div>
             )}
           </li>
-        
-      )
-
-      }
-
+        )}
       </ul>
     </nav>
   );

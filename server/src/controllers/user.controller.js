@@ -65,7 +65,7 @@ export const login = async (req, res) => {
             });
         }
 
-        let user = await User.findOne({ email });
+        const  user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
                 message: "Incorrect email or password.",
@@ -94,14 +94,7 @@ export const login = async (req, res) => {
             { expiresIn: '1d' }
         );
 
-        user = {
-            _id: user._id,
-            fullname: user.fullname,
-            email: user.email,
-            phone: user.phone,
-            role: user.role,
-            profile: user.profile
-        }
+      
 
 
         const options={
@@ -241,7 +234,7 @@ export const uploadPhoto = async (req, res) => {
 
 export const getUser = async (req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user?._id;
 
         if (!userId) {
             return res.status(400).json({
@@ -250,7 +243,7 @@ export const getUser = async (req, res) => {
             });
         }
 
-        const user = await User.findById(userId).select("-password -_id -createdAt -updatedAt");
+        const user = await User.findById(userId).select("-password -__v -_id -createdAt -updatedAt");
 
         if (!user) {
             return res.status(404).json({

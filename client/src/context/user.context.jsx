@@ -1,25 +1,23 @@
-// User.context.jsx
-
-import { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 // Create a custom axios instance
 const api = axios.create({
-  // ✅ add base URL if needed
   withCredentials: true,
 });
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const register = async (userData) => {
     setLoading(true);
     try {
-      await api.post('/api/v1/user/register', userData);
+      await api.post('api/v1/user/register', userData);
     } catch (error) {
       throw error.response?.data || error;
     } finally {
@@ -31,7 +29,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await api.post('/api/v1/user/login', { email, password, role });
-      setUser(data?.user);
+    // console.log(data);
+      setUser(data?.user); 
+      setIsLoggedIn(true);
       return data;
     } catch (error) {
       throw error.response?.data || error;
@@ -40,25 +40,50 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const fetchUser = async () => {
+  const logout = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/api/v1/user/get-user');
-      setUser(data?.user);
-      return data?.user;
+      await api.get('/api/v1/user/logout'); // Assuming you have a logout API
+      setUser(null);
+      setIsLoggedIn(false);
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error('Logout error:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  const getUser=async()=>{
+      try {
+          const {data}=await api.get("/api/v1/user/get-user");
+          setUser(data?.user);
+          if(data?.user.role==="doctor"){
+            // setIsLoggedIn(true);
+       //   setIsLoggedIn(true);
+          
 
+              // the call for the doctor details 
+
+          }
+
+
+      } catch (error) {
+
+          console.error("Error fetching user data:", error);
+        logout();
+
+      }
+
+
+  }
+   useEffect(() => {
+
+    getUser();
+
+   },[])
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, fetchUser }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout, isLoggedIn,getUser }}>
       {children}
     </AuthContext.Provider>
   );

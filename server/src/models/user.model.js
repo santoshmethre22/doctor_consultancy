@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
     appointmentId: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Appointment", // change this to the actual model name you will reference
+        ref: "Appointment",
       },
     ],
 
@@ -51,11 +51,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "No bio provided",
     },
-    
-    appoinmentId:[{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Appointment",
-    }]
   },
   { timestamps: true }
 );

@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import "./profile.css"; // Assuming you have a CSS file for styling
 import Navbar from "../components/Home/Navbar/Navbar.jsx";
+import { useAuth } from "../context/user.context.jsx";
+
+
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
+
+
+  //const {user,logout, isLoggedIn}=useAuth();
+
+
 
   const [user, setUser] = useState({
     name: "John Doe",
@@ -40,6 +48,17 @@ const UserProfile = () => {
     setIsEditing(false);
     console.log("Updated User:", user);
   };
+
+  const handleLogout = async() => {
+    // Impl ement logout functionality here
+ 
+         await logout()
+
+         console.log("the  user logged out")
+                                                         
+     
+   // console.log("User logged out");
+  }
 
   return (
 
@@ -188,6 +207,8 @@ const UserProfile = () => {
           )}
 
           <button onClick={handleEditToggle} className="edit-btn">Edit Profile</button>
+       
+          <button onClick={handleLogout} className="edit-btn"> logout</button>
         </div>
       )}
     </div>
