@@ -138,81 +138,53 @@ export const logout = async (req, res) => {
 }
 export const updateProfile = async (req, res) => {
     try {
-        const { fullname, email, phoneNumber, bio} = req.body;
-        
-        const file = req.file;
-        // cloudinary ayega idhar
-      //  const fileUri = getDataUri(file);
-       // const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-
-
-
-        
-        const userId = req.id; // middleware authentication
-        let user = await User.findById(userId);
-
-        if (!user) {
-            return res.status(400).json({
-                message: "User not found.",
-                success: false
-            })
-        }
-        // updating data
-        if(fullname) user.fullname = fullname
-        if(email) user.email = email
-        if(phoneNumber)  user.phoneNumber = phoneNumber
-        if(bio) user.profile.bio = bio
-        if(skills) user.profile.skills = skillsArray
+      const { object } = req.body;
+      const userId = req.user?._id;
       
-        // resume comes later here...
-        if(cloudResponse){
-            user.profile.resume = cloudResponse.secure_url // save the cloudinary url
-            user.profile.resumeOriginalName = file.originalname // Save the original file name
-        }
-
-
-        await user.save();
-
-        user = {
-            _id: user._id,
-            fullname: user.fullname,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            role: user.role,
-            profile: user.profile
-        }
-
-        return res.status(200).json({
-            message:"Profile updated successfully.",
-            user,
-            success:true
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-
-export const getAllDoctor = async (req, res) => {
-    try {
-        const users = await User.find({ role: "doctor" });
-
-        res.status(200).json({
-            message: "Data fetched successfully.",
-            users,
-            success: true
+      if (!userId) {
+        return res.status(401).json({
+          message: "Unauthorized: No user ID found.",
+          success: false,
         });
-    } catch (error) {
-        console.log(error);
-
-        res.status(404).json({
-            message: "Failed to fetch data.",
-            success: false
+      }
+  
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found.",
+          success: false,
         });
+      }
+  
+      if (object) {
+        const fieldsToUpdate = ['fullname', 'username', 'email', 'phone', 'role', 'bio', 'profilePicture'];
+  
+        fieldsToUpdate.forEach(field => {
+          if (object[field] !== undefined && object[field] !== null) {
+            user[field] = object[field];
+          }
+        });
+      }
+  
+      await user.save();
+  
+      return res.status(200).json({
+        message: "Profile updated successfully.",
+        user,
+        success: true,
+      });
+  
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      return res.status(500).json({
+        message: "Something went wrong while updating the profile.",
+        success: false,
+        error: error.message,
+      });
     }
-};
-
+  };
+  
 
 export const uploadPhoto = async (req, res) => {
     try {
@@ -245,7 +217,7 @@ export const uploadPhoto = async (req, res) => {
 
         const avatarUrl = await uploadOnCloudinary(avatarFile.path); 
 
-        user.avatar = avatarUrl;
+        user.profilePicture = avatarUrl;
         await user.save();
 
 
