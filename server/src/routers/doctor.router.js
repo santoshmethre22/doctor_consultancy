@@ -1,5 +1,5 @@
 import express from 'express';
-import {  editDoctorProfile, 
+import {  editDoctorDetails, 
     getAllDoctors,
     getDoctorHistroy,
     getCurrentDoctor
@@ -8,16 +8,11 @@ import {  editDoctorProfile,
     import { verifyJWT } from "../middleware/auth.middleware.js";
    // import { upload } from "../middleware/multer.middleware.js";
 
-
-
-
-
 const router = express.Router();
 router.get('/getAllDoctors', getAllDoctors);
-router.post('/editProfile',verifyJWT, editDoctorProfile);
+router.post('/editDoctorDetails',verifyJWT, editDoctorDetails);
 router.get('/getDoctorHistroy',verifyJWT, getDoctorHistroy);
 router.get('/getCurrentDoctor',verifyJWT, getCurrentDoctor);
-
 
 
 

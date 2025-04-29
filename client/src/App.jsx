@@ -1,5 +1,8 @@
 import './App.css';
 import { AuthProvider } from './context/user.context.jsx';
+import { DoctorProvider } from './context/doctor.contex.jsx';
+
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Signup from './components/Auth/Signup.jsx';
 import Login from './components/Auth/Login.jsx';
@@ -13,6 +16,9 @@ function App() {
     <div className="App">
       <Router> {/* ✅ Router wraps everything */}
         <AuthProvider> {/* ✅ Wraps Routes, NOT inside Routes */}
+         
+         <DoctorProvider>
+
           <Routes> {/* ✅ Only one Routes wrapper */}
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<Signup />} />
@@ -22,6 +28,9 @@ function App() {
             <Route path='/dashboard' element={<Dashboard />} />
             {/* Add more routes here */}
           </Routes>
+
+         </DoctorProvider>
+
         </AuthProvider>
       </Router>
     </div>

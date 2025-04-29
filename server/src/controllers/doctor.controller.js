@@ -1,22 +1,33 @@
 import User from "../models/user.model.js";
 import Doctor from "../models/doctor.model.js";
 
-const editDoctorProfile = async (req, res) => {
+const editDoctorDetails = async (req, res) => {
     try {
+
+      const role=req.user?.role;
       const userId = req.user?._id;
-  
+      
+      if(role !== "doctor") {
+
+          return res.status(403).json({
+            message:"your are not the doctor can not need to add this details ",
+            success:false
+          })
+
+      }
+
+
       if (!userId) {
         return res.status(400).json({
           message: "User ID not found",
           success: false
         });
       }
-  
       // Fetch the doctor with populated fields
       const doctor = await Doctor.findOne({ userId })
-        .populate("userId", "-password -__v") // Populating the userId field (User details)
-        .populate("hospitalId", "-__v") // Populating the hospitalId field
-        .populate("patientId", "-__v"); // Populating the patientId field
+        // .populate("userId", "-password -__v") // Populating the userId field (User details)
+        // .populate("hospitalId", "-__v") // Populating the hospitalId field
+        // .populate("patientId", "-__v"); // Populating the patientId field
   
       if (!doctor) {
         return res.status(404).json({
@@ -25,12 +36,7 @@ const editDoctorProfile = async (req, res) => {
         });
       }
   
-      const { name, email, phone,  qualification, speciality, experience, fee } = req.body;
-  
-      // Update User basic fields (userId is already populated in doctor)
-      if (name) doctor.userId.name = name; // Update name in user document
-      if (email) doctor.userId.email = email; // Update email in user document
-      if (phone) doctor.userId.phone = phone; // Update phone in user document
+      const {  qualification, speciality, experience, fee } = req.body;
     //   if (password) {
     //     // Hash password if it's being updated
     //     doctor.userId.password = await bcrypt.hash(password, 10); // Assuming you're using bcrypt
@@ -120,7 +126,6 @@ const getAllDoctors =async(req,res)=>{
       success:false
     })
 
-
   }
 
 }
@@ -165,40 +170,40 @@ const getDoctorHistroy=async(req,res)=>{
 }
 
 
-const getCurrentDoctor=async(req,res)=>{
-    try {
+// const getCurrentDoctor=async(req,res)=>{
+//     try {
 
-        const userId =req.user?._id;
+//         const userId =req.user?._id;
 
-        const doctor =await Doctor.find({userId:userId}).select("-__v");
-        if(!doctor) {
-          return res.status(404).json({
-            message: "Doctor not found",
-            success: false
-          });
-        }
+//         const doctor =await Doctor.find({userId:userId}).select("-__v");
+//         if(!doctor) {
+//           return res.status(404).json({
+//             message: "Doctor not found",
+//             success: false
+//           });
+//         }
   
-        res.status(200).json({
-          message:"Doctor fetched successfully",
-          success:true,
-          data:doctor
-        })
+//         res.status(200).json({
+//           message:"Doctor fetched successfully",
+//           success:true,
+//           data:doctor
+//         })
       
-    } catch (error) {
-      console.error("Error fetching doctor:", error);
-      res.status(500).json({
-        message:"Internal Server Error",
-        success:false
-      })
-    }
+//     } catch (error) {
+//       console.error("Error fetching doctor:", error);
+//       res.status(500).json({
+//         message:"Internal Server Error",
+//         success:false
+//       })
+//     }
 
 
-}
+// }
 
 
 export { 
     
-  editDoctorProfile, 
+  editDoctorDetails, 
 
   getAllDoctors,
   getDoctorHistroy,
