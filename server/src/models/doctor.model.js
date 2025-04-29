@@ -11,7 +11,7 @@ const doctorSchema = new mongoose.Schema(
     hospitalId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Hospital",
-      required: true,
+     
     },
 
     patients: [
@@ -23,22 +23,22 @@ const doctorSchema = new mongoose.Schema(
 
     qualification: {
       type: String,
-      required: true,
+     
     },
 
     speciality: {
       type: String,
-      required: true,
+      
     },
 
     experience: {
       type: String,
-      required: true,
+     
     },
 
     fee: {
       type: String,
-      required: true,
+      
     },
 
     appointment: [

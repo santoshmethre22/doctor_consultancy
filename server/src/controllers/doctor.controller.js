@@ -96,9 +96,7 @@ const editDoctorProfile = async (req, res) => {
 // }
 
 const getAllDoctors =async(req,res)=>{
-  
   try { 
-
     const doctors=await Doctor.find();
     if (!doctors) {
       return res.status(404).json({
@@ -170,8 +168,9 @@ const getDoctorHistroy=async(req,res)=>{
 const getCurrentDoctor=async(req,res)=>{
     try {
 
-        const doctorId =req.user?._id;
-        const doctor =await Doctor.findById(doctorId).select("-__v");
+        const userId =req.user?._id;
+
+        const doctor =await Doctor.find({userId:userId}).select("-__v");
         if(!doctor) {
           return res.status(404).json({
             message: "Doctor not found",
@@ -200,7 +199,6 @@ const getCurrentDoctor=async(req,res)=>{
 export { 
     
   editDoctorProfile, 
-  //  getD 
 
   getAllDoctors,
   getDoctorHistroy,
