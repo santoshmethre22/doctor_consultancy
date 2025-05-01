@@ -170,43 +170,97 @@ const getDoctorHistroy=async(req,res)=>{
 }
 
 
-// const getCurrentDoctor=async(req,res)=>{
-//     try {
+const getCurrentDoctor = async (req, res) => {
+  try {
+    const userId = req.user?._id;
 
-//         const userId =req.user?._id;
+    if (!userId) {
+      return res.status(400).json({
+        message: "User ID missing from request",
+        success: false,
+      });
+    }
 
-//         const doctor =await Doctor.find({userId:userId}).select("-__v");
-//         if(!doctor) {
-//           return res.status(404).json({
-//             message: "Doctor not found",
-//             success: false
-//           });
-//         }
-  
-//         res.status(200).json({
-//           message:"Doctor fetched successfully",
-//           success:true,
-//           data:doctor
-//         })
-      
-//     } catch (error) {
-//       console.error("Error fetching doctor:", error);
-//       res.status(500).json({
-//         message:"Internal Server Error",
-//         success:false
-//       })
-//     }
+    const doctor = await Doctor.findOne({ userId })
+      .populate("userId", "-__v -password")
+      .populate("hospitalId", "-__v")
+      .populate("patientId", "-__v");
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor not found",
+        success: false,
+      });
+    }
+
+    res.status(200).json({
+      message: "Doctor fetched successfully",
+      success: true,
+      data: doctor,
+    });
+  } catch (error) {
+    console.error("Error fetching doctor:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
 
 
-// }
+const createDoctor=async(req,res)=>{
+  try {
+    
+      const role =req.user?.role;
 
+      const userId =req.user?._id;
+
+      if(role!=="doctor") {
+        return res.status(403).json({
+          message:"your are not the doctor can not need to add this details ",
+          success:false
+        })
+      }
+
+      if(!userId) {
+        return res.status(400).json({
+          message:"User ID not found",
+          success:false
+        })
+      }
+
+      const { qualification, speciality, experience, fee } = req.body;
+
+      const doctor =await Doctor.create({
+        userId,
+        qualification,
+        speciality,
+        experience,
+        fee
+      })
+
+      if(!doctor) {
+        return res.status(404).json({
+          message:"Doctor not found",
+          success:false
+        })
+      }
+
+      return res.status(200).json({
+          message:"you are registered",
+          success:true,
+          data:doctor
+        
+        })
+
+  } catch (error) {
+    
+  }
+}
 
 export { 
-    
   editDoctorDetails, 
-
   getAllDoctors,
   getDoctorHistroy,
   getCurrentDoctor
-
  };

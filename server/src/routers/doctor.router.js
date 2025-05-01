@@ -12,7 +12,7 @@ const router = express.Router();
 router.get('/getAllDoctors', getAllDoctors);
 router.post('/editDoctorDetails',verifyJWT, editDoctorDetails);
 router.get('/getDoctorHistroy',verifyJWT, getDoctorHistroy);
-router.get('/getCurrentDoctor',verifyJWT, getCurrentDoctor);
+router.get('/get-doctor-info',verifyJWT, getCurrentDoctor);
 
 
 
