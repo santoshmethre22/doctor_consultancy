@@ -2,104 +2,64 @@ import User from "../models/user.model.js";
 import Doctor from "../models/doctor.model.js";
 
 const editDoctorDetails = async (req, res) => {
-    try {
+  try {
+    const role = req.user?.role;
+    const userId = req.user?._id;
 
-      const role=req.user?.role;
-      const userId = req.user?._id;
-      
-      if(role !== "doctor") {
-
-          return res.status(403).json({
-            message:"your are not the doctor can not need to add this details ",
-            success:false
-          })
-
-      }
-
-
-      if (!userId) {
-        return res.status(400).json({
-          message: "User ID not found",
-          success: false
-        });
-      }
-      // Fetch the doctor with populated fields
-      const doctor = await Doctor.findOne({ userId })
-        // .populate("userId", "-password -__v") // Populating the userId field (User details)
-        // .populate("hospitalId", "-__v") // Populating the hospitalId field
-        // .populate("patientId", "-__v"); // Populating the patientId field
-  
-      if (!doctor) {
-        return res.status(404).json({
-          message: "Doctor not found",
-          success: false
-        });
-      }
-  
-      const {  qualification, speciality, experience, fee } = req.body;
-    //   if (password) {
-    //     // Hash password if it's being updated
-    //     doctor.userId.password = await bcrypt.hash(password, 10); // Assuming you're using bcrypt
-    //   }
-  
-      // Save updated user (through doctor)
-      await doctor.userId.save();
-  
-      // Update Doctor-specific fields
-      if (qualification) doctor.qualification = qualification;
-      if (speciality) doctor.speciality = speciality;
-      if (experience) doctor.experience = experience;
-      if (fee) doctor.fee = fee;
-  
-      // Save updated doctor data
-      await doctor.save();
-  
-      res.status(200).json({
-        message: "Doctor profile updated successfully",
-        success: true,
-        data: { user: doctor.userId, doctor }
-      });
-  
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      res.status(500).json({
-        message: "Internal Server Error",
-        success: false
+    if (!userId) {
+      return res.status(400).json({
+        message: "User ID not found",
+        success: false,
       });
     }
-  };
+
+    if (role !== "doctor") {
+      return res.status(403).json({
+        message: "You are not authorized to edit doctor details",
+        success: false,
+      });
+    }
+
+    // Find doctor based on logged-in user
+    const doctor = await Doctor.findOne({ userId }).populate("userId");
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor not found",
+        success: false,
+      });
+    }
+
+    const { qualification, speciality, experience, fee } = req.body;
+
+    // Update Doctor-specific fields
+    if (qualification !== undefined) doctor.qualification = qualification;
+    if (speciality !== undefined) doctor.speciality = speciality;
+    if (experience !== undefined) doctor.experience = experience;
+    if (fee !== undefined) doctor.fee = fee;
+
+    // Save updated doctor data
+    const newdoctor=await doctor.save();
+
+    res.status(200).json({
+      message: "Doctor profile updated successfully",
+      success: true,
+      data: {
+        newdoctor,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error updating doctor profile:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
   
 
-// const getDoctorProfile=async(req,res)=>{
-//     try {
-//         const userId = req.user?._id;
-//       //  const doctor = await Doctor.findOne({ userId }).populate("userId", "-password -__v").populate("hospitalId", "-__v").populate("patientId", "-__v");
-
-//       const doctor =await Doctor.findOne({userId}).populate("userId", "-password -__v").populate("hospitalId", "-__v").populate("patientId", "-__v")
-//       if (!doctor) {
-//         return res.status(404).json({
-//           message: "Doctor not found",
-//           success: false
-//         });
-//       }
-
-//         res.status(200).json({
-//             message:"Doctor profile fetched successfully",
-//             success:true,
-//             data:doctor
-//         })
-
-//     } catch (error) {
-
-//         console.error("Error fetching doctor profile:", error);
-//         res.status(500).json({
-//             message:"Internal Server Error",
-//             success:false
-//         })
-        
-//     }
-    
-// }
 
 const getAllDoctors =async(req,res)=>{
   try { 

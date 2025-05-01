@@ -10,14 +10,10 @@ import {  editDoctorDetails,
    // import { upload } from "../middleware/multer.middleware.js";
 
 const router = express.Router();
-router.post('/editDoctorDetails',verifyJWT, editDoctorDetails);
+router.put('/edit-doctor-details',verifyJWT, editDoctorDetails);
 router.get('/getDoctorHistroy',verifyJWT, getDoctorHistroy);
 router.get('/get-doctor-info',verifyJWT, getCurrentDoctor);
 router.get('/getAllDoctors', getAllDoctors);
-
-
-
-
 
 export default router;
 
