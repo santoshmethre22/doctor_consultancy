@@ -14,21 +14,36 @@ export const DoctorProvider = ({ children }) => {
 
     const editDoctorDetails = async ({ qualification, speciality, experience, fee }) => {
         try {
-            const res = await api.post("/api/v1/doctor/editDoctorDetails", {
+            // Optionally set loading state here
+            // setLoading(true);
+    
+            const response = await api.put("/api/v1/doctor/edit-doctor-details", {
                 qualification,
                 speciality,
                 experience,
-                fee
+                fee,
             });
-            setDoctor(res.data.data.user);
-            console.log(res.data.data.user);
-        } catch (err) {
-            console.log(err.response?.data || err.message);
+    
+            const updatedUser = response?.data?.data?.newdoctor;
+            if (updatedUser) {
+                setDoctor(updatedUser); // Update local state
+                console.log("Doctor profile updated:", updatedUser);
+                // Optionally show a success toast/message here
+            } else {
+                console.warn("No updated user data received.");
+            }
+    
+        } catch (error) {
+            const message = error.response?.data?.message || error.message || "An error occurred";
+            console.error("Failed to update doctor details:", message);
+            // Optionally show error toast/message here
+        } finally {
+            // setLoading(false); // Reset loading state
         }
     };
+    
 
-
-
+   
     
     const getDoctorProfile = async () => {
         try {
