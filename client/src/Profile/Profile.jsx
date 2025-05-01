@@ -2,10 +2,33 @@ import React, { useState } from "react";
 import "./profile.css";
 import Navbar from "../components/Home/Navbar/Navbar.jsx";
 import { useAuth } from "../context/user.context.jsx";
+import { useDoctor  } from "../context/doctor.contex.jsx";
+
+
+
 
 const UserProfile = () => {
   const { logout, user } = useAuth();
+  //const doctor ="";// the doctor context here 
   const [isEditing, setIsEditing] = useState(false);
+
+
+  const {doctor}=useDoctor();
+  const [doctorDetails,setDoctorDetails]=useState({
+    qualification:doctor?.qualification || "",
+    speciality:doctor?.speciality || "",
+    experience:doctor?.experience || "",
+    fee:doctor?.fee || "",
+   
+  })
+
+  const handlechangeDoctor=(e)=>{
+
+
+    const {name,value}=e.target;
+    setDoctorDetails((prev)=>({...prev,[name]:value}));
+
+  }
 
   const [userDetails, setUserDetails] = useState({
     name: user?.name || "",
@@ -59,14 +82,14 @@ const UserProfile = () => {
               required
             />
 
-            <input
+            {/* <input
               type="text"
               name="username"
               value={userDetails.username}
               onChange={handleChange}
               placeholder="Username"
               required
-            />
+            /> */}
 
             <input
               type="email"
@@ -86,15 +109,6 @@ const UserProfile = () => {
               required
             />
 
-            <select
-              name="role"
-              value={userDetails.role}
-              onChange={handleChange}
-              required
-            >
-              <option value="patient">Patient</option>
-              <option value="doctor">Doctor</option>
-            </select>
 
             <textarea
               name="bio"
@@ -103,12 +117,54 @@ const UserProfile = () => {
               placeholder="Bio"
               rows="3"
             />
+            
+            
+            {
+              userDetails.role === "doctor" && ( 
+               <> 
+              <input
+                type="text"
+                name="qualification"
+                value={doctorDetails.qualification}
+                onChange={handlechangeDoctor}
+                placeholder="qualification"
+                required
+              />
 
-            {userDetails.role === "doctor" && (
-              <div>
-                <button className="doctor-btn">Edit your doctor details</button>
-              </div>
-            )}
+
+              <input
+              type="text"
+              name="experience"
+              value={doctorDetails.experience}
+              onChange={handlechangeDoctor}
+              placeholder="experience"
+              required
+            />
+               
+
+
+               <input
+              type="text"
+              name="fee"
+              value={doctorDetails.fee}
+              onChange={handlechangeDoctor}
+              placeholder="fee"
+              required
+            />
+
+
+             <input
+              type="text"
+              name="speciality"
+              value={doctorDetails.speciality}
+              onChange={handlechangeDoctor}
+              placeholder="speciality"
+              required
+            />
+               </>
+           
+              )
+            }
 
             <div className="button-group">
               <button type="submit" className="save-btn">Save</button>
@@ -125,6 +181,18 @@ const UserProfile = () => {
             <p><strong>Phone:</strong> {userDetails.phone}</p>
             <p><strong>Role:</strong> {userDetails.role}</p>
             <p><strong>Bio:</strong> {userDetails.bio}</p>
+
+           
+            {userDetails.role === "doctor" && (
+             
+             
+             <div>
+                <p><strong>Qualification:</strong> {doctorDetails.qualification}</p>
+                <p><strong>Experience:</strong> {doctorDetails.experience}</p>
+                <p><strong>Fee:</strong> {doctorDetails.fee}</p>
+                <p><strong>Speciality:</strong> {doctorDetails.speciality}</p>
+              </div>
+            )}
 
             <button onClick={handleEditToggle} className="edit-btn">Edit Profile</button>
             <button onClick={handleLogout} className="edit-btn">Logout</button>

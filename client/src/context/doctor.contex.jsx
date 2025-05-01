@@ -1,5 +1,6 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "./user.context.jsx";
 
 export const DoctorContext = createContext();
 
@@ -9,6 +10,7 @@ const api = axios.create({
 
 export const DoctorProvider = ({ children }) => {
     const [doctor, setDoctor] = useState(null);
+    const { user } = useAuth();
 
     const editDoctorDetails = async ({ qualification, speciality, experience, fee }) => {
         try {
@@ -25,27 +27,37 @@ export const DoctorProvider = ({ children }) => {
         }
     };
 
-
-    const getDoctorProfile=async()=>{
+    const getDoctorProfile = async () => {
         try {
-
-            const res=await api.get("/api/v1/doctor/get-doctor-info")
+            const res = await api.get("/api/v1/doctor/get-doctor-info");
             console.log(res.data.user);
             setDoctor(res.data.user);
-
-            
         } catch (error) {
-            
+            console.log(error.response?.data || error.message);
         }
+    };
 
-    }
+    useEffect(() => {
+        let isMounted = true;
+
+        const init = async () => {
+            if (user?.role === "doctor") {
+                await getDoctorProfile();
+            }
+        };
+
+        init();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [user]);
+
     return (
-        <DoctorContext.Provider value={{ doctor, editDoctorDetails }}>
+        <DoctorContext.Provider value={{doctor,editDoctorDetails ,getDoctorProfile }}>
             {children}
         </DoctorContext.Provider>
     );
 };
 
-//const useDoctor = () => useContext(DoctorContext);
-export const useDoctor=()=>useContext(DoctorContext)
-
+export const useDoctor = () => useContext(DoctorContext);
