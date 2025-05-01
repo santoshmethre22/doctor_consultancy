@@ -3,6 +3,7 @@ import User  from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import Doctor from "../models/doctor.model.js";
 
 
 //import getDataUri from "../utils/datauri.js";
@@ -32,7 +33,7 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await User.create({
+    const newuser=  await User.create({
             name,
             username,
             email,
@@ -40,6 +41,22 @@ export const register = async (req, res) => {
             password: hashedPassword,
             role,
         });
+
+        
+        if (role === "doctor") {
+        
+            const doctor = await Doctor.create({
+                userId: newuser._id,
+                qualification: "",
+                speciality: "",
+                experience: "",
+                fee: "",
+            });
+
+            newuser.doctorId = doctor._id;
+            await newuser.save();
+        }
+        
 
         return res.status(201).json({
             message: "Account created successfully.",
