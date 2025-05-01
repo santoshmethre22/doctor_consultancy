@@ -27,6 +27,9 @@ export const DoctorProvider = ({ children }) => {
         }
     };
 
+
+
+    
     const getDoctorProfile = async () => {
         try {
             const res = await api.get("/api/v1/doctor/get-doctor-info");
