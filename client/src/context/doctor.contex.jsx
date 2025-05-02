@@ -10,97 +10,75 @@ const api = axios.create({
 
 export const DoctorProvider = ({ children }) => {
     const [doctor, setDoctor] = useState(null);
-    const [allDoctors,setAllDoctors] = useState(null);
-
-
+    const [allDoctors, setAllDoctors] = useState([]);
+    const [loading, setLoading] = useState(false); // Optional: for loading state
 
     const { user } = useAuth();
 
     const editDoctorDetails = async ({ qualification, speciality, experience, fee }) => {
         try {
-            // Optionally set loading state here
-            // setLoading(true);
-    
+            setLoading(true);  // Set loading to true when making an API call
+
             const response = await api.put("/api/v1/doctor/edit-doctor-details", {
                 qualification,
                 speciality,
                 experience,
                 fee,
             });
-    
+
             const updatedUser = response?.data?.data?.newdoctor;
             if (updatedUser) {
                 setDoctor(updatedUser); // Update local state
                 console.log("Doctor profile updated:", updatedUser);
-                // Optionally show a success toast/message here
             } else {
                 console.warn("No updated user data received.");
             }
-    
         } catch (error) {
             const message = error.response?.data?.message || error.message || "An error occurred";
             console.error("Failed to update doctor details:", message);
-            // Optionally show error toast/message here
         } finally {
-            // setLoading(false); // Reset loading state
+            setLoading(false); // Reset loading state
         }
     };
 
-    const getAllDoctors=async()=>{
+    const getAllDoctors = async () => {
         try {
-            const res=await api.get("/api/v1/doctor/get-all-doctor");
-            console.log(res.data.data);
-            setAllDoctors(res.data);
+            setLoading(true);  // Set loading to true when making an API call
 
+            const res = await api.get("/api/v1/doctor/get-all-doctor");
+            setAllDoctors(res.data.data);  // Set correct response data
         } catch (error) {
             console.log(error.response?.data || error.message);
-
-            
+        } finally {
+            setLoading(false);  // Reset loading state
         }
+    };
 
-    }
-      
-    
     const getDoctorProfile = async () => {
         try {
+            setLoading(true);  // Set loading to true when making an API call
+
             const res = await api.get("/api/v1/doctor/get-doctor-info");
-            console.log(res.data.user);
             setDoctor(res.data.user);
         } catch (error) {
             console.log(error.response?.data || error.message);
+        } finally {
+            setLoading(false);  // Reset loading state
         }
     };
 
-    useEffect(()=>{
-        let isMounted=true;
-        const init =async()=>{
-            await getAllDoctors();    
-        }
-        init();
-        return ()=>{
-            isMounted=false
-
-        }
-    },[])
+    useEffect(() => {
+        getAllDoctors();  // Fetch all doctors when component mounts
+    }, []);
 
     useEffect(() => {
-        let isMounted = true;
-
-        const init = async () => {
-            if (user?.role === "doctor") {
-                await getDoctorProfile();
-            }
-        };
-
-        init();
-
-        return () => {
-            isMounted = false;
-        };
+        if (user?.role === "doctor") {
+            getDoctorProfile();  // Fetch doctor profile if user is a doctor
+        }
     }, [user]);
 
     return (
-        <DoctorContext.Provider value={{doctor,editDoctorDetails ,getDoctorProfile,allDoctors}}>
+        <DoctorContext.Provider value={{ doctor, editDoctorDetails, getDoctorProfile, allDoctors, loading }}>
             {children}
         </DoctorContext.Provider>
     );
