@@ -14,7 +14,7 @@ const doctorSchema = new mongoose.Schema(
      
     },
 
-    patients: [
+    patientId: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User", // reference to patients

@@ -2,8 +2,15 @@ import React, { useState } from 'react'
 import "./Dashboard.css"
 import Navbar from '../Home/Navbar/Navbar.jsx'
 import Footer from '../Home/Footer/Footer.jsx'
+
+import { useDoctor } from '../../context/doctor.contex.jsx'
+
+
 function Dashboard() {
   
+
+  const {allDoctors}=useDoctor()
+
 
   // const [doctor,setDoctor]=useState();
   // const [hostpital,setHospital]=useState();
@@ -15,6 +22,22 @@ function Dashboard() {
       <Navbar/>
       <h1>Dashboard</h1>
       hello i m dashboard
+
+
+      {
+        allDoctors.map((doctor,index)=>(
+          <div key={index}>
+
+            hi i am doctor 
+          </div>
+
+        ))
+      }
+
+
+
+
+
       <Footer/>
     </div>
   )

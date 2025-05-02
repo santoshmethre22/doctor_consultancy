@@ -10,6 +10,10 @@ const api = axios.create({
 
 export const DoctorProvider = ({ children }) => {
     const [doctor, setDoctor] = useState(null);
+    const [allDoctors,setAllDoctors] = useState(null);
+
+
+
     const { user } = useAuth();
 
     const editDoctorDetails = async ({ qualification, speciality, experience, fee }) => {
@@ -41,9 +45,21 @@ export const DoctorProvider = ({ children }) => {
             // setLoading(false); // Reset loading state
         }
     };
-    
 
-   
+    const getAllDoctors=async()=>{
+        try {
+            const res=await api.get("/api/v1/doctor/get-all-doctor");
+            console.log(res.data.data);
+            setAllDoctors(res.data);
+
+        } catch (error) {
+            console.log(error.response?.data || error.message);
+
+            
+        }
+
+    }
+      
     
     const getDoctorProfile = async () => {
         try {
@@ -54,6 +70,18 @@ export const DoctorProvider = ({ children }) => {
             console.log(error.response?.data || error.message);
         }
     };
+
+    useEffect(()=>{
+        let isMounted=true;
+        const init =async()=>{
+            await getAllDoctors();    
+        }
+        init();
+        return ()=>{
+            isMounted=false
+
+        }
+    },[])
 
     useEffect(() => {
         let isMounted = true;
@@ -72,7 +100,7 @@ export const DoctorProvider = ({ children }) => {
     }, [user]);
 
     return (
-        <DoctorContext.Provider value={{doctor,editDoctorDetails ,getDoctorProfile }}>
+        <DoctorContext.Provider value={{doctor,editDoctorDetails ,getDoctorProfile,allDoctors}}>
             {children}
         </DoctorContext.Provider>
     );

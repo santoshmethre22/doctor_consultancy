@@ -63,13 +63,17 @@ const editDoctorDetails = async (req, res) => {
 
 const getAllDoctors =async(req,res)=>{
   try { 
-    const doctors=await Doctor.find();
+    const doctors=await Doctor.find().populate("userId","-__v -password")
+    .populate("hospitalId","-__v")
+    .populate("patientId","-__v");
     if (!doctors) {
       return res.status(404).json({
         message: "Doctors not found",
         success: false
       });
     }
+
+    console.log(doctors.data);
     res.status(200).json({
       message:"Doctors fetched successfully",
       success:true,

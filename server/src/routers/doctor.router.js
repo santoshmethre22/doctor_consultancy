@@ -13,7 +13,10 @@ const router = express.Router();
 router.put('/edit-doctor-details',verifyJWT, editDoctorDetails);
 router.get('/getDoctorHistroy',verifyJWT, getDoctorHistroy);
 router.get('/get-doctor-info',verifyJWT, getCurrentDoctor);
-router.get('/getAllDoctors', getAllDoctors);
+router.get('/get-all-doctor', getAllDoctors);
+
+
+
 
 export default router;
 
