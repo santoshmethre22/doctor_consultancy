@@ -1,56 +1,42 @@
- import mongoose from "mongoose";
-import Application from "./application.model";
-
-const hosipitalScheama=new mongoose.Schema({
-        name:{
-            type:String,
-            required:true
-        } ,
-
-        email:{
-            type:String,
-            required:true
-        },
-        password:{
-            type:String,
-            required:true
-        },
-
-        doctors:[{
-            
-          type:mongoose.Schema.Types.ObjectId,
-          ref:"User"
-            
-        }],
+import mongoose from "mongoose";
 
 
-        patient:[
-        {         
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-                
-        }]
-        , 
-        
-        
-        applications:[{
-            
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Application"
-            
-        }],
-        
-        location:{
-                    type:String,
-                    required:true
-        },
+const hospitalSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
 
-})
+    email: {
+        type: String,
+        required: true
+    },
 
+    password: {
+        type: String,
+        required: true
+    },
 
+    doctors: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
 
+    patients: [{ // renamed from 'patient'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
 
+    applications: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Application"
+    }],
 
+    location: {
+        type: String,
+        required: true
+    },
+});
 
-const Hospital=mongoose.model("Hospital",hosipitalScheama)
+const Hospital = mongoose.model("Hospital", hospitalSchema);
 export default Hospital;

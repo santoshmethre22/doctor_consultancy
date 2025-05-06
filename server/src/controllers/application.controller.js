@@ -38,9 +38,6 @@ const applyForpost=async(req,res)=>{
    
      }
    
-   
-   
-   
        if(doctor.hospitalId===hospitalId){
        // error here 
        return res.status(400).json({
@@ -50,6 +47,7 @@ const applyForpost=async(req,res)=>{
    
        }
    
+
        
        const application=Application.create({
            
@@ -81,3 +79,73 @@ const applyForpost=async(req,res)=>{
   
   
   }
+
+
+
+const acceptApplication=async(req,res)=>{
+
+   try {
+     const hospitalId=req.body.user._id;
+ 
+     const applicationId=req.query.applicationId;
+     
+ 
+     const application=Application.findById(applicationId)
+ 
+     application.status="accepted";
+     application.save();
+ 
+     return res.status(200).json({
+       message:"the application is accepted",
+       data:application,
+       success:true
+     })
+   } catch (error) {
+
+    return res.status(500).json({
+        message:"Internal Server Error",
+        success:false
+      })
+    
+   }
+
+}
+
+
+const rejectApplication=async(req,res)=>{
+
+    try {
+      const hospitalId=req.body.user._id;
+  
+      const applicationId=req.query.applicationId;
+      
+  
+      const application=Application.findById(applicationId) 
+      
+      application.status="rejected";
+      application.save();
+
+      return res.status(200).json({
+        message:"the application is rejected",
+        data:application,
+        success:true
+      })
+
+    } catch (error) {
+
+      return res.status(500).json({
+          message:"Internal Server Error",
+          success:false
+        })
+
+    }
+
+}
+
+
+
+export{
+    applyForpost,
+    acceptApplication,
+    rejectApplication
+}

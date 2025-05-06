@@ -175,8 +175,6 @@ const getCurrentDoctor = async (req, res) => {
 
 
 
-
-
 export { 
   editDoctorDetails, 
   getAllDoctors,
