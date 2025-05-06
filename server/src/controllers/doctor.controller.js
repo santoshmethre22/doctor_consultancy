@@ -172,6 +172,21 @@ const getCurrentDoctor = async (req, res) => {
 };
 
 
+// aply for the hospital 
+
+const applyForpost=async(req,res)=>{
+
+  const doctorId=req.user._id;
+
+  const hospitalId=req.params;
+
+ // const Hostpital=
+
+ 
+
+
+}
+
 
 
 
