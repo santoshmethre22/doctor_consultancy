@@ -1,4 +1,5 @@
  import mongoose from "mongoose";
+import Application from "./application.model";
 
 const hosipitalScheama=new mongoose.Schema({
         name:{
@@ -31,11 +32,18 @@ const hosipitalScheama=new mongoose.Schema({
         }]
         , 
         
+        
+        applications:[{
+            
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Application"
+            
+        }],
+        
         location:{
                     type:String,
                     required:true
-        }
-
+        },
 
 })
 

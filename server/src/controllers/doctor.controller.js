@@ -1,5 +1,7 @@
 import User from "../models/user.model.js";
 import Doctor from "../models/doctor.model.js";
+import Hospital from "../models/hospital.model.js";
+import Application from "../models/application.model.js";
 
 const editDoctorDetails = async (req, res) => {
   try {
@@ -170,22 +172,6 @@ const getCurrentDoctor = async (req, res) => {
     });
   }
 };
-
-
-// aply for the hospital 
-
-const applyForpost=async(req,res)=>{
-
-  const doctorId=req.user._id;
-
-  const hospitalId=req.params;
-
- // const Hostpital=
-
- 
-
-
-}
 
 
 
