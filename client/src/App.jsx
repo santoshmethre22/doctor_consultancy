@@ -9,7 +9,7 @@ import Login from './components/Auth/Login.jsx';
 import HomePage from './components/Home/Home.jsx';
 import Profile from './Profile/Profile.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
-
+import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
 
 function App() {
   return (
@@ -26,6 +26,9 @@ function App() {
             <Route path="/profile" element={<Profile />} />
 
             <Route path='/dashboard' element={<Dashboard />} />
+
+            <Route path='/chat-interface' element={<ChatDashBoard />} />
+
             {/* Add more routes here */}
           </Routes>
 
