@@ -16,9 +16,15 @@ function DoctorCard({ userId, qualification, speciality, experience, fee }) {
       <p><strong>Experience:</strong> {experience || "N/A"} years</p>
       <p><strong>Fee:</strong> ₹{fee || "N/A"}</p>
 
-      <button onClick={() => navigate(`/checkout-doctor/${userId?._id}`)}>
-        consult doctor
+
+
+    {/** add this to onclick fundtion here onClick={() => navigate(`/checkout-doctor/${userId?._id}` */}
+      <button >
+
+        consult doctor--- later implementation
       </button>
+
+      <button onClick={()=>navigate(`/chat-interface/${userId}`)} >chat with doctor (implemented)</button>
     </div>
   );
 }

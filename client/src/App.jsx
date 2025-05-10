@@ -27,7 +27,7 @@ function App() {
 
             <Route path='/dashboard' element={<Dashboard />} />
 
-            <Route path='/chat-interface' element={<ChatDashBoard />} />
+            <Route path='/chat-interface/:id' element={<ChatDashBoard />} />
 
             {/* Add more routes here */}
           </Routes>
