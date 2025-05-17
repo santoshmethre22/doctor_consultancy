@@ -7,6 +7,10 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { user, isLoggedIn, logout } = useAuth();
 
+  console.log("this is from  the navbar",user)
+ // console.log("this is from  the navbar role",user.data.role)
+
+
   const handleLogout = async () => {
     await logout();
     console.log('Successfully logged out');
@@ -23,10 +27,13 @@ const Navbar = () => {
       </div>
       <ul className="navbar-links">
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/doctors">Doctors</Link></li>
-        <li><Link to="/appointments">Appointments</Link></li>
+        {/* <li><Link to="/doctors">Doctors</Link></li> */}
+        {/* <li><Link to="/appointments">Appointments</Link></li> */}
         <li><Link to="/about">About</Link></li>
         <li><Link to="/contact">Contact</Link></li>
+
+        <li><Link to ="/dashboard">Dashboard</Link></li>
+        
 
         {!isLoggedIn ? (
           <>
