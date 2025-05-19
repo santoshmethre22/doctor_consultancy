@@ -146,6 +146,8 @@ export const logout = async (req, res) => {
         console.log(error);
     }
 }
+
+
 export const updateProfile = async (req, res) => {
     try {
       const { object } = req.body;
@@ -216,7 +218,7 @@ export const uploadPhoto = async (req, res) => {
             });
         }
 
-        const avatarFile = req.files?.avatar?.[0];
+        const avatarFile = req.file;
 
         if (!avatarFile) {
             return res.status(400).json({
@@ -225,13 +227,20 @@ export const uploadPhoto = async (req, res) => {
             });
         }
 
-        const avatarUrl = await uploadOnCloudinary(avatarFile.path); 
+        const avatarUrl = await uploadOnCloudinary(avatarFile.path);
 
-        user.profilePicture = avatarUrl;
+        if (!avatarUrl) {
+  return res.status(500).json({
+    message: "Cloudinary upload failed",
+    success: false
+  });
+}
+
+
+        user.profilePicture = avatarUrl.secure_url; // safest to use secure_url
         await user.save();
 
-
-        const createdUser = await User.findById(user._id).select("-password ");
+        const createdUser = await User.findById(user._id).select("-password");
 
         return res.status(200).json({
             message: "Avatar uploaded successfully",
@@ -240,15 +249,18 @@ export const uploadPhoto = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "Something went wrong",
-            success: false,
-        });
-    }
+  console.error("Upload Error:", error); // 👈 more clear logging
+  return res.status(500).json({
+    message: "Something went wrong",
+    success: false,
+    error: error.message  // 👈 include this for debugging
+  });
+}
 };
 
 
+
+//
 export const getUser = async (req, res) => {
     try {
         const userId = req.user?._id;
