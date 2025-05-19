@@ -24,6 +24,10 @@ router.post("/logout", verifyJWT, logout);
 router.post("/upload",verifyJWT,upload.single('avatar'),uploadPhoto)
 router.get("/get-user", verifyJWT, getUser);
 
+
+// todo : here you need to add the upload method ----------------------------->
+router.post("/upload-photo",verifyJWT)
+
 // Future secured routes
 // router.patch("/update-account", verifyJWT, updateAccountDetails);
 // router.post("/updatephoto", upload.single("file"), verifyJWT, updatePhoto);

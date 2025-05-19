@@ -166,6 +166,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const photoUpload=async(formdata)=>{
+    try {
+      
+      // todo : here you need to 
+
+
+    } catch (error) {
+      
+      console.error('Error uploading photo:', error);
+    }
+
+  }
+
   // Auto-fetch user data on mount
   useEffect(() => {
     let isMounted = true;

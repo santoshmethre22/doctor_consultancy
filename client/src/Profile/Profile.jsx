@@ -5,13 +5,16 @@ import { useAuth } from "../context/user.context.jsx";
 import { useDoctor } from "../context/doctor.contex.jsx";
 
 const UserProfile = () => {
-  // Context hooks
   const { logout, user } = useAuth();
   const { doctor, editDoctorDetails } = useDoctor();
-  
+
   // State management
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingDoctor, setEditingDoctor] = useState(false);
+
+  // file upload state
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   const [doctorDetails, setDoctorDetails] = useState({
     qualification: doctor?.qualification || "",
@@ -27,7 +30,7 @@ const UserProfile = () => {
     phone: user?.phone || "",
     role: user?.role || "patient",
     bio: user?.bio || "",
-    profilePicture: ""
+    profilePicture: user?.profilePicture || ""
   });
 
   const handleChangeDoctor = (e) => {
@@ -53,8 +56,8 @@ const UserProfile = () => {
   const handleSaveUser = async (e) => {
     e.preventDefault();
     setIsEditing(false);
-    // Add API call to update user details if needed// ------>
     console.log("Updated User:", userDetails);
+    // Optionally send updated userDetails to backend
   };
 
   const handleSaveDoctor = async (e) => {
@@ -73,11 +76,51 @@ const UserProfile = () => {
     console.log("The user logged out");
   };
 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result); // base64 preview
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) return alert("Please select a file first.");
+
+    const formData = new FormData();
+    formData.append("profile", file); // key name must match backend
+
+    try {
+      // add here the method to uplaod the image 
+
+     // const data = await res.json();
+
+      // if (res.ok) {
+      //   setUserDetails(prev => ({
+      //     ...prev,
+      //     profilePicture: data.imageUrl,
+      //   }));
+        alert("Upload successful!");
+      // } else {
+      // //   alert("Upload failed: " + data.message);
+      // }
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed.");
+    }
+  };
+
   return (
     <>
       <Navbar />
       <div className="profile-container">
-        {/* User Edit Form */}
+
+        {/* Edit User Form */}
         {isEditing && (
           <form onSubmit={handleSaveUser} className="profile-form">
             <h2>Edit Profile</h2>
@@ -129,7 +172,7 @@ const UserProfile = () => {
           </form>
         )}
 
-        {/* Doctor Edit Form */}
+        {/* Edit Doctor Form */}
         {isEditingDoctor && (
           <form onSubmit={handleSaveDoctor} className="profile-form">
             <h2>Edit Doctor Details</h2>
@@ -189,10 +232,31 @@ const UserProfile = () => {
               {userDetails.profilePicture && (
                 <img src={userDetails.profilePicture} alt="Profile" className="profile-pic" />
               )}
+
+              <div style={{ marginTop: "1rem" }}>
+                <input type="file" accept="image/*" onChange={handleFileChange} />
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginTop: "0.5rem",
+                    }}
+                  />
+                )}
+                <button onClick={handleUpload} className="btn upload-btn">
+                  Upload
+                </button>
+              </div>
+
               <h2>{userDetails.name}</h2>
               <p className="role-badge">{userDetails.role}</p>
             </div>
-            
+
             <div className="profile-details">
               <div className="detail-item">
                 <span className="detail-label">Username:</span>
@@ -234,12 +298,6 @@ const UserProfile = () => {
               )}
             </div>
 
-
-
-
-
-
-----------------------------------------------------------
             <div className="button-group">
               <button onClick={toggleEdit} className="btn edit-btn">
                 Edit Profile
