@@ -5,8 +5,11 @@ import { useAuth } from "../context/user.context.jsx";
 import { useDoctor } from "../context/doctor.contex.jsx";
 
 const UserProfile = () => {
-  const { logout, user } = useAuth();
-  const { doctor, editDoctorDetails } = useDoctor();
+  const { logout, user ,photoUpload} = useAuth();
+
+
+  // ------------------------------------ this is the doctor context --------------------------->
+  const { doctor, editDoctorDetails} = useDoctor();
 
   // State management
   const [isEditing, setIsEditing] = useState(false);
@@ -56,20 +59,20 @@ const UserProfile = () => {
   const handleSaveUser = async (e) => {
     e.preventDefault();
     setIsEditing(false);
-    console.log("Updated User:", userDetails);
+ //   console.log("Updated User:", userDetails);
     // Optionally send updated userDetails to backend
   };
 
-  const handleSaveDoctor = async (e) => {
-    e.preventDefault();
-    try {
-      await editDoctorDetails(doctorDetails);
-      setEditingDoctor(false);
-      console.log("Doctor profile updated");
-    } catch (error) {
-      console.error("Failed to update doctor details:", error);
-    }
-  };
+  // const handleSaveDoctor = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await editDoctorDetails(doctorDetails);
+  //     setEditingDoctor(false);
+  //     console.log("Doctor profile updated");
+  //   } catch (error) {
+  //     console.error("Failed to update doctor details:", error);
+  //   }
+  // };
 
   const handleLogout = async () => {
     await logout();
@@ -89,31 +92,58 @@ const UserProfile = () => {
     }
   };
 
-  const handleUpload = async () => {
-    if (!file) return alert("Please select a file first.");
+const handleUpload = async () => {
+  if (!file) return alert("Please select a file first.");
 
-    const formData = new FormData();
-    formData.append("profile", file); // key name must match backend
+  const formData = new FormData();
+  formData.append("avatar", file); // key must match backend
 
-    try {
-      // add here the method to uplaod the image 
+  try {
+    const data = await photoUpload({ id: user._id, formData });
 
-     // const data = await res.json();
+    if (!data || !data.success) return alert("Upload failed.");
 
-      // if (res.ok) {
-      //   setUserDetails(prev => ({
-      //     ...prev,
-      //     profilePicture: data.imageUrl,
-      //   }));
-        alert("Upload successful!");
-      // } else {
-      // //   alert("Upload failed: " + data.message);
-      // }
-    } catch (err) {
-      console.error(err);
-      alert("Upload failed.");
+    setUserDetails(prev => ({
+      ...prev,
+      profilePicture: data.user.profilePicture,
+    }));
+
+    alert("Upload successful!");
+  } catch (err) {
+    console.error(err);
+    alert("Upload failed.");
+  }
+};
+
+
+
+
+const handleUpdateDetails=async()=>{
+
+}
+
+
+const handleUpdateDoctorDetails=async()=>{
+
+  try { 
+
+    const response =await editDoctorDetails(doctorDetails);
+
+    if(response?.data?.success){
+      setDoctorDetails(response.data.doctor);
+      alert("Doctor details updated successfully");    
+
     }
-  };
+
+  } catch (error) {
+
+    console.error("Failed to update doctor details:", error.message);
+    alert("Failed to update doctor details");
+    
+  }
+
+}
+
 
   return (
     <>
@@ -122,6 +152,8 @@ const UserProfile = () => {
 
         {/* Edit User Form */}
         {isEditing && (
+
+          // todo :think here whith handlesave user  is ---
           <form onSubmit={handleSaveUser} className="profile-form">
             <h2>Edit Profile</h2>
             <div className="form-group">
@@ -174,7 +206,7 @@ const UserProfile = () => {
 
         {/* Edit Doctor Form */}
         {isEditingDoctor && (
-          <form onSubmit={handleSaveDoctor} className="profile-form">
+          <form onSubmit={handleUpdateDoctorDetails} className="profile-form">
             <h2>Edit Doctor Details</h2>
             <div className="form-group">
               <label>Qualification</label>

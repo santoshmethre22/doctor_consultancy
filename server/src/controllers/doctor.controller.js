@@ -147,10 +147,7 @@ const getCurrentDoctor = async (req, res) => {
       });
     }
 
-    const doctor = await Doctor.findOne({ userId })
-      .populate("userId", "-__v -password")
-      .populate("hospitalId", "-__v")
-      .populate("patientId", "-__v");
+    const doctor = await Doctor.findOne({ userId });  // ✅ FIXED
 
     if (!doctor) {
       return res.status(404).json({
@@ -172,6 +169,7 @@ const getCurrentDoctor = async (req, res) => {
     });
   }
 };
+
 
 
 

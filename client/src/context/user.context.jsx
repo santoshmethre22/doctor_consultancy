@@ -166,18 +166,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const photoUpload=async(formdata)=>{
-    try {
-      
-      // todo : here you need to 
+ const photoUpload = async ({ id, formData }) => {
+  try {
+    const response = await api.post(`/api/v1/user/upload/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
+    console.log('Photo uploaded successfully!');
 
-    } catch (error) {
-      
-      console.error('Error uploading photo:', error);
-    }
-
+    console.log('Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading photo:', error);
+    throw error; // Optional: re-throw if parent function needs to handle it
   }
+};
 
   // Auto-fetch user data on mount
   useEffect(() => {
@@ -211,9 +216,29 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+
+  const updateDetai=async()=>{
+    // todo:update user details ---only for user details 
+    try {
+      
+    } catch (error) {
+      
+    }
+
+
+  }
   
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout, isLoggedIn }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading,
+       register,
+     login, 
+     logout, 
+     isLoggedIn ,
+     photoUpload,
+     updateDetai
+     }}>
       {children}
     </AuthContext.Provider>
   );

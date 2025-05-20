@@ -5,8 +5,10 @@ import { useAuth } from "./user.context.jsx";
 export const DoctorContext = createContext();
 
 const api = axios.create({
-    withCredentials: true
+  baseURL: "/api", // Let Vite proxy handle the rest
+  withCredentials: true
 });
+
 
 export const DoctorProvider = ({ children }) => {
     const [doctor, setDoctor] = useState(null);
@@ -19,7 +21,7 @@ export const DoctorProvider = ({ children }) => {
         try {
             setLoading(true);  // Set loading to true when making an API call
 
-            const response = await api.put("/api/v1/doctor/edit-doctor-details", {
+            const response = await api.put("/v1/doctor/edit-doctor-details", {
                 qualification,
                 speciality,
                 experience,
@@ -27,12 +29,17 @@ export const DoctorProvider = ({ children }) => {
             });
 
             const updatedUser = response?.data?.data?.newdoctor;
+
+
             if (updatedUser) {
                 setDoctor(updatedUser); // Update local state
                 console.log("Doctor profile updated:", updatedUser);
             } else {
                 console.warn("No updated user data received.");
             }
+
+
+            return response.data;
         } catch (error) {
             const message = error.response?.data?.message || error.message || "An error occurred";
             console.error("Failed to update doctor details:", message);
@@ -45,7 +52,7 @@ export const DoctorProvider = ({ children }) => {
         try {
             setLoading(true);  // Set loading to true when making an API call
 
-            const res = await api.get("/api/v1/doctor/get-all-doctor");
+            const res = await api.get("/v1/doctor/get-all-doctor");
             setAllDoctors(res.data.data);  // Set correct response data
         } catch (error) {
             console.log(error.response?.data || error.message);
@@ -58,7 +65,7 @@ export const DoctorProvider = ({ children }) => {
         try {
             setLoading(true);  // Set loading to true when making an API call
 
-            const res = await api.get("/api/v1/doctor/get-doctor-info");
+            const res = await api.get('/v1/doctor/get-doctor-info');
             setDoctor(res.data.user);
         } catch (error) {
             console.log(error.response?.data || error.message);

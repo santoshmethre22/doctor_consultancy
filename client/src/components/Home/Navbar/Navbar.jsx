@@ -7,13 +7,11 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { user, isLoggedIn, logout } = useAuth();
 
-  console.log("this is from  the navbar",user)
- // console.log("this is from  the navbar role",user.data.role)
 
 
   const handleLogout = async () => {
     await logout();
-    console.log('Successfully logged out');
+   // console.log('Successfully logged out');
   };
 
   const toggleProfileMenu = () => {
