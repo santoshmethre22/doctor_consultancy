@@ -3,11 +3,12 @@ import "./profile.css";
 import Navbar from "../components/Home/Navbar/Navbar.jsx";
 import { useAuth } from "../context/user.context.jsx";
 import { useDoctor } from "../context/doctor.contex.jsx";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const { logout, user ,photoUpload} = useAuth();
 
-
+  const navigate=useNavigate();
   // ------------------------------------ this is the doctor context --------------------------->
   const { doctor, editDoctorDetails} = useDoctor();
 
@@ -74,8 +75,37 @@ const UserProfile = () => {
   //   }
   // };
 
+
+  // todo : hanle logout method to implement ------------------>
   const handleLogout = async () => {
-    await logout();
+    const res=await logout();
+
+    if(res?.success){
+      alert("Logout successful");
+    setUserDetails({
+      name: "",
+      username: "", 
+      email: "",
+      phone: "",
+      profilePicture: "",
+      role: "patient",
+      bio: "",
+    });
+    setDoctorDetails({
+      qualification: "",
+      speciality: "",
+      experience: "",
+      fee: "",  
+
+    });
+    navigate("/login");
+
+    
+
+  }
+  else{
+    alert("logout failed")
+  }
     console.log("The user logged out");
   };
 

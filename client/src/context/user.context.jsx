@@ -105,6 +105,7 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext();
 
 const api = axios.create({
+   baseURL: "http://localhost:8000",
   withCredentials: true,
 });
 
@@ -142,10 +143,12 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setLoading(true);
     try {
-      await api.get('/api/v1/user/logout');
+      await api.post('/api/v1/user/logout');
       setUser(null);
       setIsLoggedIn(false);
-      navigate('/'); // Redirect after logout
+
+      return {success:true }
+     // navigate('/'); // Redirect after logout
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -217,7 +220,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
 
-  const updateDetai=async()=>{
+  const updateDetails=async()=>{
     // todo:update user details ---only for user details 
     try {
       
@@ -237,7 +240,7 @@ export const AuthProvider = ({ children }) => {
      logout, 
      isLoggedIn ,
      photoUpload,
-     updateDetai
+     updateDetails
      }}>
       {children}
     </AuthContext.Provider>
