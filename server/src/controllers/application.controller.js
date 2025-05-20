@@ -58,16 +58,12 @@ const applyForpost=async(req,res)=>{
              status:"applied",
  
        })
- 
      const newApplication=  application.save()
-
         return  res.status(200).json({
             message:"Application submitted successfully",
             success:true,
             data:newApplication
          })
-       
-   
    } catch (error) {
      console.error("Error applying for post:", error);
    return  res.status(500).json({
@@ -76,8 +72,7 @@ const applyForpost=async(req,res)=>{
      })
     
    }
-  
-  
+
   }
 
 
@@ -141,6 +136,8 @@ const rejectApplication=async(req,res)=>{
     }
 
 }
+
+
 
 
 

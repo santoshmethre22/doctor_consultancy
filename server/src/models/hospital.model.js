@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 
 
 const hospitalSchema = new mongoose.Schema({
+    
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        required:true
+    },
+    
     name: {
         type: String,
         required: true
@@ -12,10 +19,6 @@ const hospitalSchema = new mongoose.Schema({
         required: true
     },
 
-    password: {
-        type: String,
-        required: true
-    },
 
     doctors: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -36,6 +39,26 @@ const hospitalSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    about:{
+        type:String,
+    },
+
+
+    blog:{
+        about:{
+            type:String,
+        }
+        ,
+        vido:{
+            type:String,
+        }
+        ,photo:{
+            type:String,
+
+        }
+    }
+
+      
 });
 
 const Hospital = mongoose.model("Hospital", hospitalSchema);
