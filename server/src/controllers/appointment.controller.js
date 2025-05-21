@@ -1,4 +1,7 @@
 import Appointment from "../models/appointment.model.js"; // Update path as needed
+import Doctor from "../models/doctor.model.js";
+import User from "../models/user.model.js";
+
 
 export const BookAppointMent = async (req, res) => {
   try {
@@ -12,13 +15,20 @@ export const BookAppointMent = async (req, res) => {
       return res.status(400).json({ success: false, message: "Missing fields" });
     }
 
+
+    const doctor=await Doctor.findById(doctorId);
+
+    if(!doctor){
+      return res.status(400).json({ success: false, message: "Doctor not found" });
+    }
+
     // Check if doctor is already booked for that time
     const isAvailable = await Appointment.findOne({
       doctorId,
       timing: new Date(timing)
     });
 
-    if (isAvailable && isAvailable.status === "pending") {
+    if (isAvailable && isAvailable.status === "Booked") {
       return res.status(409).json({
         success: false,
         message: "Doctor is already booked at this time",
@@ -32,6 +42,21 @@ export const BookAppointMent = async (req, res) => {
       status: "pending"
     });
 
+    if (!newApp) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to create appointment",
+      });
+    }
+    // todo :add this appointment to the doctor and patient
+
+    doctor.appointment.push(newApp._id);
+   const patient =await User.findById(userId);
+
+   patient.appointmentId.push(newApp._id);
+   await patient.save();
+   await doctor.save();
+
     return res.status(201).json({
       success: true,
       message: "Appointment booked successfully",
@@ -43,8 +68,6 @@ export const BookAppointMent = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
-
-
 
 export const cancelAppointment = async (req, res) => {
   try {
@@ -63,15 +86,16 @@ export const cancelAppointment = async (req, res) => {
       });
     }
 
-    appointment.status = "completed";
+    appointment.status = "cancelled";
     await appointment.save();
 
     return res.status(200).json({
       success: true,
-      message: "Appointment cancelled (marked as completed)",
+      message: "Appointment cancelled",
       appointment,
     });
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("Cancel Error:", error);
     return res.status(500).json({
       success: false,
@@ -79,3 +103,113 @@ export const cancelAppointment = async (req, res) => {
     });
   }
 };
+
+export const acceptAppointment=async (req, res) => {
+  
+  try {
+
+    const userId=req.user._id;
+    if(!userId){
+      return res.status(400).json({success:false,message:"User not found"})
+    }
+    const { appointmentId } = req.params;
+
+    const doctor=await Doctor.findOne({userId:userId});
+    
+    if(!doctor){
+      return res.status(400).json({success:false,message:"Doctor not found"})
+    }
+
+    if(!doctor.appointment.includes(appointmentId)){
+      return res.status(403).json({success:false,message:"this appointment is not for you"})
+    }
+
+
+    const appointment = await Appointment.findOne({
+      _id: appointmentId,
+    });
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    appointment.status = "Booked";
+    await appointment.save();
+
+    return res.status(200).json({
+      success:true,
+      message:"Appointment accepted",
+      appointment,
+    })
+    
+  } catch (error) {
+    
+
+    console.error("Accept Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+
+}
+
+export const rejectAppointment=async (req, res) => {
+  try {
+
+    const userId=req.user._id;
+    const appointmentId=req.params;
+
+   const doctor=await Doctor.findOne({userId:userId});
+    
+    if(!doctor){
+      return res.status(400).json({success:false,message:"Doctor not found"})
+    }
+
+      if(!doctor.appointment.includes(appointmentId)){
+      return res.status(403).json({success:false,message:"this appointment is not for you"})
+    }
+
+
+    const appointment = await Appointment.findOne({
+      _id: appointmentId,
+    });
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    appointment.status = "free";
+    await appointment.save();
+
+    return res.status(200).json({
+      success:true,
+      message:"Appiontment is rejected by the doctor",
+      appointment,
+    })
+    
+
+
+  } catch (error) {
+     console.error("Accept Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+}
+
+// // todo :this method to implement at the last 
+// // todo: that should be like auto delete after the time 
+// // todo :this will auto 
+// export const completeAppointment=async(req,res)=>{
+// }
+
+
+
