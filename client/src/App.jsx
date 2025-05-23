@@ -11,15 +11,17 @@ import Profile from './Profile/Profile.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
 import AppointmentCard from './pages/Appointment.jsx';
-
+import { AppointmentProvider } from './context/appointment.context.jsx';
 
 function App() {
   return (
     <div className="App">
       <Router> {/* ✅ Router wraps everything */}
         <AuthProvider> {/* ✅ Wraps Routes, NOT inside Routes */}
-         
-         <DoctorProvider>
+          <DoctorProvider>
+            <AppointmentProvider>
+
+
 
           <Routes> {/* ✅ Only one Routes wrapper */}
             <Route path="/" element={<HomePage />} />
@@ -36,6 +38,7 @@ function App() {
             <Route path='/appointments/:id' element={<AppointmentCard />} />
           </Routes>
 
+            </AppointmentProvider>
          </DoctorProvider>
 
         </AuthProvider>

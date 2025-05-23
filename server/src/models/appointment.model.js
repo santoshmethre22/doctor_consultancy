@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const appointmentSchema = new mongoose.Schema(
   {
-    patientId: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Assuming both user and doctor are stored in User model
       required: true,

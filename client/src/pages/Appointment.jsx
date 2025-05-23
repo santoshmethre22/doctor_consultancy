@@ -1,11 +1,42 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDoctor } from "../context/doctor.contex.jsx";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppointment } from "../context/appointment.context.jsx";
 
 const AppointmentFormCard = () => {
-  const { allDoctors } = useDoctor();
-  const [doctor, setDoctor] = useState(null); // null to indicate "not loaded yet"
+  const { allDoctors } = useDoctor(); 
+  const [doctor, setDoctor] = useState(null);
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { bookAppointment } = useAppointment();
+
+  const [formData, setFormData] = useState({
+    date: "",
+    time: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.date || !formData.time) {
+      alert("Please select both date and time.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const success = await bookAppointment(formData.date, formData.time, id);
+    setIsSubmitting(false);
+
+    if (success) {
+      setTimeout(() => navigate("/dashboard"), 1000); // Optional: allow toast to show
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   useEffect(() => {
     if (allDoctors && id) {
@@ -13,27 +44,6 @@ const AppointmentFormCard = () => {
       setDoctor(doctorData || null);
     }
   }, [allDoctors, id]);
-
-  const [formData, setFormData] = useState({
-    date: "",
-    time: "",
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.date || !formData.time) {
-      alert("Please select both date and time.");
-      return;
-    }
-    alert(
-      `Appointment booked with ${doctor?.userId?.name} on ${formData.date} at ${formData.time}`
-    );
-    setFormData({ date: "", time: "" }); // reset form
-  };
 
   if (!doctor) {
     return <p className="text-center mt-10">Loading doctor details...</p>;
@@ -53,6 +63,7 @@ const AppointmentFormCard = () => {
             value={formData.date}
             onChange={handleChange}
             className="mt-1 block w-full border rounded px-3 py-2"
+            min={new Date().toISOString().split("T")[0]} // prevent past dates
             required
           />
         </div>
@@ -71,9 +82,12 @@ const AppointmentFormCard = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          disabled={isSubmitting}
+          className={`w-full text-white py-2 rounded transition ${
+            isSubmitting ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          Book Appointment
+          {isSubmitting ? "Booking..." : "Book Appointment"}
         </button>
       </form>
     </div>

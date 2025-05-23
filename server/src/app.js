@@ -24,11 +24,8 @@ import doctorRouter from "./routers/doctor.router.js"
 
 
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/doctor", doctorRouter);
 app.use("/api/v1/appointment",appointmentRouter)
-
-app.use("/api/v1/doctor", doctorRouter)
-
-
 // Default route
 
 export { app };

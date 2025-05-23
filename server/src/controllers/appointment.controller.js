@@ -6,14 +6,13 @@ import User from "../models/user.model.js";
 export const BookAppointMent = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { timing } = req.body;
-    const doctorId = req.params.doctorId?.trim();
 
+    const { timing,date } = req.body;
+    const doctorId = req.params.id?.trim();
 
-    console.log({ userId, timing, doctorId });
-    if (!userId || !timing || !doctorId) {
-      return res.status(400).json({ success: false, message: "Missing fields" });
-    }
+    if (!date || !timing || !doctorId) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
 
 
     const doctor=await Doctor.findById(doctorId);
@@ -22,23 +21,34 @@ export const BookAppointMent = async (req, res) => {
       return res.status(400).json({ success: false, message: "Doctor not found" });
     }
 
+    const combinedDateTime=new Date(`${date}T${timing}`);
+    const start =new Date(combinedDateTime);
+    const end=new Date(combinedDateTime);
+     end.setMinutes(end.getMinutes() + 59);
+
     // Check if doctor is already booked for that time
     const isAvailable = await Appointment.findOne({
-      doctorId,
-      timing: new Date(timing)
+     doctorId: doctorId,
+      // todo : think for date and time 
+      // date: date,
+      // timing: new Date(timing)
+        timing: { $gte: start, $lte: end },
+        status:"Booked"
     });
 
-    if (isAvailable && isAvailable.status === "Booked") {
+    if (isAvailable ) {
       return res.status(409).json({
         success: false,
         message: "Doctor is already booked at this time",
       });
     }
 
+
+
     const newApp = await Appointment.create({
       userId,
       doctorId,
-      timing: new Date(timing),
+      timing: combinedDateTime,
       status: "pending"
     });
 
@@ -53,7 +63,12 @@ export const BookAppointMent = async (req, res) => {
     doctor.appointment.push(newApp._id);
    const patient =await User.findById(userId);
 
+   if (!patient) {
+  return res.status(404).json({ success: false, message: "Patient not found" });
+}
    patient.appointmentId.push(newApp._id);
+
+   
    await patient.save();
    await doctor.save();
 
@@ -68,6 +83,9 @@ export const BookAppointMent = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+
+
 export const cancelAppointment = async (req, res) => {
   try {
     const userId = req.user._id;
