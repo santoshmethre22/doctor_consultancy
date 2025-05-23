@@ -15,6 +15,8 @@ const AppointmentFormCard = () => {
     time: "",
   });
 
+
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -36,11 +38,12 @@ const AppointmentFormCard = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log("Form data updated:", { ...formData, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
     if (allDoctors && id) {
-      const doctorData = allDoctors.find((doc) => doc.userId._id === id);
+      const doctorData = allDoctors.find((doc) => doc._id === id);
       setDoctor(doctorData || null);
     }
   }, [allDoctors, id]);

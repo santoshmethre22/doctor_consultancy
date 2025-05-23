@@ -5,7 +5,7 @@ import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { ClipLoader } from "react-spinners";
 import "./Login.css";
 
-const Login = ({ setShowLogin }) => {
+const Login = () => {
   const { login,user } = useAuth();
   const navigate = useNavigate();
 

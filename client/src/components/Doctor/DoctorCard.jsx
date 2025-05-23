@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // ✅ Correct import
 import './DoctorCard.css';
 
-function DoctorCard({ userId, qualification, speciality, experience, fee }) {
+function DoctorCard({_id, userId, qualification, speciality, experience, fee }) {
   const navigate = useNavigate(); // ✅ Correct usage
 
   return (
@@ -24,7 +24,9 @@ function DoctorCard({ userId, qualification, speciality, experience, fee }) {
         consult doctor--- later implementation
       </button>
 
-      <button onClick={()=>navigate(`/appointments/${userId._id}`)}> Book Appoinment</button>
+      // todo : here is the mistake 
+
+      <button onClick={()=>navigate(`/appointments/${_id}`)}> Book Appoinment</button>
 
       <button onClick={()=>navigate(`/chat-interface/${userId._id}`)} >chat with doctor (implemented)</button>
     </div>

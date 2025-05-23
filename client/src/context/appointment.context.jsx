@@ -18,6 +18,10 @@ const bookAppointment = async (date, time, id) => {
     const res = await api.post(`/book-appointment/${id}`, {
       date,
       timing: time, // Make sure your backend expects "timing". Change to "time" if needed.
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     if (res.data.success) {
