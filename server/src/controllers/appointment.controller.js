@@ -68,7 +68,6 @@ export const BookAppointMent = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
-
 export const cancelAppointment = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -103,7 +102,6 @@ export const cancelAppointment = async (req, res) => {
     });
   }
 };
-
 export const acceptAppointment=async (req, res) => {
   
   try {
@@ -156,7 +154,6 @@ export const acceptAppointment=async (req, res) => {
   }
 
 }
-
 export const rejectAppointment=async (req, res) => {
   try {
 
@@ -204,12 +201,54 @@ export const rejectAppointment=async (req, res) => {
     });
   }
 }
-
 // // todo :this method to implement at the last 
 // // todo: that should be like auto delete after the time 
 // // todo :this will auto 
+
+
 // export const completeAppointment=async(req,res)=>{
 // }
 
 
 
+// todo :  get all the appointemnt of today
+
+const getTodayappointment=async(req,res)=>{
+    const userId=req.user._id;
+    const doctor =await Doctor.findOne({userId:userId}).populate("appointment -__v")
+
+
+    // method to filter all the appointment here
+      const appointmens=doctor.map()
+
+
+      return  res.status(200).json({
+
+        success:true,
+        message:"fetched all the appoinments of today",
+        data:appointmens
+      })
+
+}
+
+// todo :last all the appointment with user details 
+
+const getCompletedAppointments=async(req,res)=>{
+
+
+
+}
+
+// todo : all the Appoint ment of the that where applied and to accepte or reject
+
+const getAllpendingAppointments=async(req,res)=>{
+
+
+  
+}
+
+
+// ------------------------------------------->
+
+
+// todo : get all the appointmen with the doctor 

@@ -16,7 +16,7 @@ const Login = ({ setShowLogin }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "user",
+    role: "patient",
   });
 
   const handleChange = (e) => {
@@ -100,7 +100,7 @@ const Login = ({ setShowLogin }) => {
               value={formData.role}
               onChange={handleChange}
             >
-              <option value="user">User</option>
+              <option value="patient">Patient</option>
               <option value="doctor">Doctor</option>
             </select>
           </div>

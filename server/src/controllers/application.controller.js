@@ -75,7 +75,7 @@ const applyForpost=async(req,res)=>{
 
   }
 
-
+//const 
 
 const acceptApplication=async(req,res)=>{
 
@@ -137,6 +137,13 @@ const rejectApplication=async(req,res)=>{
 
 }
 
+const cancelAppointment=async(req,res)=>{
+    const userId=req.user._id;
+    const appointmentId=req.params;
+    
+
+}
+
 
 
 
@@ -144,5 +151,6 @@ const rejectApplication=async(req,res)=>{
 export{
     applyForpost,
     acceptApplication,
-    rejectApplication
+    rejectApplication,
+    cancelAppointment
 }

@@ -5,90 +5,105 @@ import { useAuth } from "./user.context.jsx";
 export const DoctorContext = createContext();
 
 const api = axios.create({
-  baseURL: "/api", // Let Vite proxy handle the rest
-  withCredentials: true
+  baseURL: "http://localhost:8000/api/v1/doctor",
+  withCredentials: true,
 });
 
-
 export const DoctorProvider = ({ children }) => {
-    const [doctor, setDoctor] = useState(null);
-    const [allDoctors, setAllDoctors] = useState([]);
-    const [loading, setLoading] = useState(false); // Optional: for loading state
+  const [doctor, setDoctor] = useState(null);
+  const [allDoctors, setAllDoctors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    const { user } = useAuth();
+  const { user } = useAuth();
 
-    const editDoctorDetails = async ({ qualification, speciality, experience, fee }) => {
-        try {
-            setLoading(true);  // Set loading to true when making an API call
+  const editDoctorDetails = async ({ qualification, speciality, experience, fee }) => {
+    try {
+      setLoading(true);
 
-            const response = await api.put("/v1/doctor/edit-doctor-details", {
-                qualification,
-                speciality,
-                experience,
-                fee,
-            });
+      const response = await api.put("/edit-doctor-details", {
+        qualification,
+        speciality,
+        experience,
+        fee,
+      });
 
-            const updatedUser = response?.data?.data?.newdoctor;
+      const updatedDoctor = response?.data?.data?.newdoctor;
 
+      if (updatedDoctor) {
+        setDoctor(updatedDoctor);
+        console.log("Doctor profile updated:", updatedDoctor);
+      } else {
+        console.warn("No updated doctor data received.");
+      }
 
-            if (updatedUser) {
-                setDoctor(updatedUser); // Update local state
-                console.log("Doctor profile updated:", updatedUser);
-            } else {
-                console.warn("No updated user data received.");
-            }
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || "An error occurred";
+      console.error("Failed to update doctor details:", message);
+      return { error: message };
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const getAllDoctors = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/get-all-doctor");
+      setAllDoctors(res.data.data || []);
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      console.error("Failed to fetch all doctors:", message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            return response.data;
-        } catch (error) {
-            const message = error.response?.data?.message || error.message || "An error occurred";
-            console.error("Failed to update doctor details:", message);
-        } finally {
-            setLoading(false); // Reset loading state
-        }
-    };
+  const getDoctorProfile = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/get-doctor-info");
 
-    const getAllDoctors = async () => {
-        try {
-            setLoading(true);  // Set loading to true when making an API call
+      if (res.data?.user) {
+        setDoctor(res.data.user);
+        console.log("Doctor profile fetched:", res.data.user);
+      } else {
+        console.warn("Doctor profile not found.");
+        setDoctor(null);
+      }
+    } catch (error) {
+      const message = error.response?.data?.message || error.message;
+      console.error("Error fetching doctor profile:", message);
+      setDoctor(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            const res = await api.get("/v1/doctor/get-all-doctor");
-            setAllDoctors(res.data.data);  // Set correct response data
-        } catch (error) {
-            console.log(error.response?.data || error.message);
-        } finally {
-            setLoading(false);  // Reset loading state
-        }
-    };
+  useEffect(() => {
+    getAllDoctors();
+  }, []);
 
-    const getDoctorProfile = async () => {
-        try {
-            setLoading(true);  // Set loading to true when making an API call
+  useEffect(() => {
+    if (user?.role === "doctor") {
+      getDoctorProfile();
+    }
+  }, [user?.role]);
 
-            const res = await api.get('/v1/doctor/get-doctor-info');
-            setDoctor(res.data.user);
-        } catch (error) {
-            console.log(error.response?.data || error.message);
-        } finally {
-            setLoading(false);  // Reset loading state
-        }
-    };
-
-    useEffect(() => {
-        getAllDoctors();  // Fetch all doctors when component mounts
-    }, []);
-
-    useEffect(() => {
-        if (user?.role === "doctor") {
-            getDoctorProfile();  // Fetch doctor profile if user is a doctor
-        }
-    }, [user]);
-
-    return (
-        <DoctorContext.Provider value={{ doctor, editDoctorDetails, getDoctorProfile, allDoctors, loading }}>
-            {children}
-        </DoctorContext.Provider>
-    );
+  return (
+    <DoctorContext.Provider
+      value={{
+        doctor,
+        editDoctorDetails,
+        getDoctorProfile,
+        allDoctors,
+        refreshAllDoctors: getAllDoctors,
+        loading,
+      }}
+    >
+      {children}
+    </DoctorContext.Provider>
+  );
 };
 
 export const useDoctor = () => useContext(DoctorContext);

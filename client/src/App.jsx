@@ -10,6 +10,8 @@ import HomePage from './components/Home/Home.jsx';
 import Profile from './Profile/Profile.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
+import AppointmentCard from './pages/Appointment.jsx';
+
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
             <Route path='/chat-interface/:id' element={<ChatDashBoard />} />
 
             {/* Add more routes here */}
+
+            <Route path='/appointments/:id' element={<AppointmentCard />} />
           </Routes>
 
          </DoctorProvider>
