@@ -5,7 +5,8 @@ import {
   BookAppointMent,
    acceptAppointment,
    rejectAppointment,
-   cancelAppointment
+   cancelAppointment,
+   getAllpendingAppointments
    
 
 } from "../controllers/appointment.controller.js"
@@ -15,11 +16,10 @@ import { verifyJWT } from "../middleware/auth.middleware.js";
 const router =Router();
 
 
-// todo :doctor 
-
+// todo :doctor -------------------------------------->
 router.post("/accept-appointment",verifyJWT,acceptAppointment);
 router.post("/reject-appointment",verifyJWT,rejectAppointment);
-
+router.get("/pending-appointments",verifyJWT,getAllpendingAppointments);
 
 // todo :  get all the appointemnt of today
 // todo :last all the appointment with user details 
@@ -31,6 +31,7 @@ router.post("/reject-appointment",verifyJWT,rejectAppointment);
 // todo :user 
 router.post("/book-appointment/:id",verifyJWT,BookAppointMent);
 router.post("/cancel-appointment",verifyJWT,cancelAppointment);
+
 // todo : get all the appointmen with the doctor
 
 

@@ -13,6 +13,8 @@ import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
 import AppointmentCard from './pages/Appointment.jsx';
 import { AppointmentProvider } from './context/appointment.context.jsx';
 
+import Options from './pages/Options.jsx';
+
 function App() {
   return (
     <div className="App">
@@ -36,6 +38,8 @@ function App() {
             {/* Add more routes here */}
 
             <Route path='/appointments/:id' element={<AppointmentCard />} />
+
+            <Route path='/options' element={<Options />} />
           </Routes>
 
             </AppointmentProvider>

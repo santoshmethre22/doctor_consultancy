@@ -96,13 +96,17 @@ const bookAppointment = async (date, time, id) => {
     }
   };
 
-  const getAllPendingAppointments = async () => {
-    try {
-      // Implement logic
-    } catch (error) {
-      console.error("Error fetching pending appointments:", error);
-    }
-  };
+  // const getAllPendingAppointments = async () => {
+  //   try {
+  //     // Implement logic
+
+  //     const res=aw
+
+
+  //   } catch (error) {
+  //     console.error("Error fetching pending appointments:", error);
+  //   }
+  // };
 
   return (
     <AppointmentContext.Provider
@@ -114,7 +118,7 @@ const bookAppointment = async (date, time, id) => {
         rejectAppointment,
         getTodayAppointments,
         getCompletedAppointments,
-        getAllPendingAppointments,
+     //   getAllPendingAppointments,
       }}
     >
       {children}

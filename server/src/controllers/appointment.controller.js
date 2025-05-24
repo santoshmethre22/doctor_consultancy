@@ -84,8 +84,6 @@ export const BookAppointMent = async (req, res) => {
   }
 };
 
-
-
 export const cancelAppointment = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -224,11 +222,6 @@ export const rejectAppointment=async (req, res) => {
 // // todo :this will auto 
 
 
-// export const completeAppointment=async(req,res)=>{
-// }
-
-
-
 // todo :  get all the appointemnt of today
 
 const getTodayappointment=async(req,res)=>{
@@ -259,10 +252,37 @@ const getCompletedAppointments=async(req,res)=>{
 
 // todo : all the Appoint ment of the that where applied and to accepte or reject
 
-const getAllpendingAppointments=async(req,res)=>{
 
 
-  
+// todo : get all the appointmen with the doctor
+export const getAllpendingAppointments=async(req,res)=>{
+try {
+    const userId=req.user._id;
+    const doctor=await Doctor.findOne({userId:userId});
+    if(!doctor){
+      return res.status(400).json({success:false,message:"Doctor not found"})
+    }  
+    const appointments=await Appointment.find(doctor._id) 
+    if(!appointments){
+      return res.status(400).json({success:false,message:"No appointments found"})
+    }  
+    const pendingAppointments =appointments.filter((appointments)=>appointments.status==="pending")
+    if(!pendingAppointments){
+      return res.status(400).json({success:false,message:"No pending appointments found"})
+    }  
+    return res.status(200).json({
+      success:true,
+      message:"Fetched all the pending appointments",
+      data:pendingAppointments
+    })
+} catch (error) {
+  console.error("Error fetching pending appointments:", error);
+  return res.status(500).json({
+    success: false,
+    message: "Server error",
+  });
+}
+
 }
 
 
