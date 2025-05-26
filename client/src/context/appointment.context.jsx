@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 
 export const AppointmentContext = createContext();
 
+
+
 const api = axios.create({
   baseURL: "http://localhost:8000/api/v1/appointment",
   withCredentials: true,
@@ -11,6 +13,8 @@ const api = axios.create({
 
 // ----------------------------------------------------------------------------------------
 export const AppointmentProvider = ({ children }) => {
+  
+  //const [pending,setPending]=useState(null);
 
 
 const bookAppointment = async (date, time, id) => {
@@ -38,15 +42,10 @@ const bookAppointment = async (date, time, id) => {
   }
 };
 
-
-
 // toast.success("Success message");
 // toast.error("Error message");
 // toast.warning("Warning message");
 // toast.info("Info message");
-
-
-
 
   const getAllAppointments = async () => {
     try {
@@ -96,17 +95,29 @@ const bookAppointment = async (date, time, id) => {
     }
   };
 
-  // const getAllPendingAppointments = async () => {
-  //   try {
-  //     // Implement logic
 
-  //     const res=aw
+   // todo  :get pending appointments
+const getAllPendingAppointments=async(id)=>
+  {
+    try {
+        const res=await api.get(`/pending-appointments/${id}`)
+
+        if(!res.data.success){
+         toast.error(res.data.message || "Failed to fetch pending appointments");
+
+        } 
+       // setPending(res.data)
+
+       return res.data;
+
+    } catch (error) {
 
 
-  //   } catch (error) {
-  //     console.error("Error fetching pending appointments:", error);
-  //   }
-  // };
+      
+    }
+
+  }
+
 
   return (
     <AppointmentContext.Provider
@@ -118,7 +129,8 @@ const bookAppointment = async (date, time, id) => {
         rejectAppointment,
         getTodayAppointments,
         getCompletedAppointments,
-     //   getAllPendingAppointments,
+        getAllPendingAppointments,
+
       }}
     >
       {children}

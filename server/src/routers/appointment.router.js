@@ -19,7 +19,9 @@ const router =Router();
 // todo :doctor -------------------------------------->
 router.post("/accept-appointment",verifyJWT,acceptAppointment);
 router.post("/reject-appointment",verifyJWT,rejectAppointment);
-router.get("/pending-appointments",verifyJWT,getAllpendingAppointments);
+
+
+router.get("/pending-appointments/:id",verifyJWT,getAllpendingAppointments);
 
 // todo :  get all the appointemnt of today
 // todo :last all the appointment with user details 

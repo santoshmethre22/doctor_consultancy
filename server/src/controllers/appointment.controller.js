@@ -254,39 +254,76 @@ const getCompletedAppointments=async(req,res)=>{
 
 
 
-// todo : get all the appointmen with the doctor
-export const getAllpendingAppointments=async(req,res)=>{
-try {
-    const userId=req.user._id;
-    const doctor=await Doctor.findOne({userId:userId});
-    if(!doctor){
-      return res.status(400).json({success:false,message:"Doctor not found"})
-    }  
-    const appointments=await Appointment.find(doctor._id) 
-    if(!appointments){
-      return res.status(400).json({success:false,message:"No appointments found"})
-    }  
-    const pendingAppointments =appointments.filter((appointments)=>appointments.status==="pending")
-    if(!pendingAppointments){
-      return res.status(400).json({success:false,message:"No pending appointments found"})
-    }  
-    return res.status(200).json({
-      success:true,
-      message:"Fetched all the pending appointments",
-      data:pendingAppointments
-    })
-} catch (error) {
-  console.error("Error fetching pending appointments:", error);
-  return res.status(500).json({
-    success: false,
-    message: "Server error",
-  });
-}
+export const getAllpendingAppointments = async (req, res) => {
+  try {
+    const userId = req.user._id;
 
-}
+    const doctor = await Doctor.findOne({ userId: userId });
+    if (!doctor) {
+      return res.status(400).json({
+        success: false,
+        message: "Doctor not found"
+      });
+    }
+
+    const appointments = await Appointment.find({
+      doctorId: doctor._id,
+      status: "pending"
+    }).populate("userId", "-__v -password");
+
+    if (!appointments || appointments.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No pending appointments found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Fetched all the pending appointments",
+      pendingAppointments: appointments
+    });
+  } catch (error) {
+    console.error("Error fetching pending appointments:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
 
 
 // ------------------------------------------->
 
 
 // todo : get all the appointmen with the doctor 
+
+// const getAllappointments=async(req,res)=>{
+//   try {
+//       const userId = req.user._id;
+//       const doctor = await Doctor.findOne({ userId: userId }).populate("appointment -__v");
+//       if (!doctor) {
+//         return res.status(400).json({
+//           success: false,
+//           message: "Doctor not found"
+//         });
+//       }
+//       if (!doctor.appointment || doctor.appointment.length === 0) {
+//         return res.status(404).json({
+//           success: false,
+//           message: "No appointments found"
+//         });
+//       }
+//       return res.status(200).json({
+//         success: true,
+//         message: "Fetched all appointments",
+//         appointments: doctor.appointment
+//       })
+//   } catch (error) {
+//     console.error("Error fetching appointments:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Server error",
+//     });
+//   }
+// }

@@ -10,10 +10,11 @@ import HomePage from './components/Home/Home.jsx';
 import Profile from './Profile/Profile.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
-import AppointmentCard from './pages/Appointment.jsx';
+
 import { AppointmentProvider } from './context/appointment.context.jsx';
 
-import Options from './pages/Options.jsx';
+import Appointment from './pages/Appointment.jsx';
+
 
 function App() {
   return (
@@ -22,9 +23,6 @@ function App() {
         <AuthProvider> {/* ✅ Wraps Routes, NOT inside Routes */}
           <DoctorProvider>
             <AppointmentProvider>
-
-
-
           <Routes> {/* ✅ Only one Routes wrapper */}
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<Signup />} />
@@ -37,9 +35,8 @@ function App() {
 
             {/* Add more routes here */}
 
-            <Route path='/appointments/:id' element={<AppointmentCard />} />
-
-            <Route path='/options' element={<Options />} />
+            <Route path='/appointment' element={<Appointment />} />
+          {/* <Route path='/options' element={<Options />} /> */}    
           </Routes>
 
             </AppointmentProvider>

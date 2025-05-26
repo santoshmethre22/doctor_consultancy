@@ -1,78 +1,102 @@
-/* Navbar.css */
-
+/* General Navbar */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #3b82f6;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .navbar-logo a {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-  }
-  
-  .navbar-links {
-    display: flex;
-    list-style: none;
-    gap: 1.5rem;
-  }
-  
-  .navbar-links li a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar-links li a:hover {
-    color: #e0f2fe;
-  }
-  
-  .signup-btn {
-    background-color: white;
-    color: #3b82f6 !important;
-    padding: 0.4rem 0.8rem;
-    border-radius: 5px;
-    font-weight: 600;
-  }
-  
-  .signup-btn:hover {
-    background-color: #e0f2fe;
-    color: #1e40af !important;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+}
 
-  /* Profile Avatar Circle (small) */
+.navbar-logo a {
+  color: white;
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+.navbar-links li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 5px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar-links li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e0f2fe;
+}
+
+/* Signup Button */
+.signup-btn {
+  background-color: white;
+  color: #2563eb !important;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.signup-btn:hover {
+  background-color: #dbeafe;
+  color: #1e3a8a !important;
+}
+
+/* Avatar (small) */
 .navbar-profile .avatar {
-  width: 35px;
-  height: 35px;
-  background-color: #4a90e2;
+  width: 36px;
+  height: 36px;
+  background-color: #1e40af;
   border-radius: 50%;
   color: white;
+  font-weight: 600;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
   cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-/* Dropdown */
+.navbar-profile .avatar:hover {
+  background-color: #1e3a8a;
+}
+
+/* Dropdown Menu (Profile) */
 .profile-dropdown {
   position: absolute;
-  right: 10px;
-  top: 60px;
+  top: 70px;
+  right: 2rem;
   background-color: white;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  padding: 12px;
-  border-radius: 8px;
-  width: 220px;
-  z-index: 1000;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 230px;
+  padding: 1rem;
+  z-index: 999;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-dropdown .profile-header {
@@ -81,22 +105,23 @@
 }
 
 .profile-dropdown .avatar-lg {
-  width: 50px;
-  height: 50px;
-  background-color: #4a90e2;
+  width: 60px;
+  height: 60px;
+  background-color: #2563eb;
   border-radius: 50%;
   color: white;
   margin: 0 auto 6px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
 }
 
 .profile-dropdown .profile-name {
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 2px;
+  font-size: 1rem;
 }
 
 .profile-dropdown .profile-mobile {
@@ -104,21 +129,51 @@
   color: #666;
 }
 
+/* Dropdown links & buttons */
 .profile-dropdown a,
 .profile-dropdown button {
   display: block;
-  padding: 8px;
-  text-decoration: none;
-  color: #333;
-  background: none;
-  border: none;
+  padding: 0.5rem;
   width: 100%;
-  text-align: left;
+  text-align: center;
+  border: none;
+  background: transparent;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s ease;
 }
 
 .profile-dropdown a:hover,
 .profile-dropdown button:hover {
-  background-color: #f3f3f3;
+  background-color: #f1f5f9;
+}
+
+/* Appointments Dropdown */
+.appointment-dropdown {
+  position: absolute;
+  top: 55px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 200px;
+  z-index: 100;
+}
+
+.appointment-dropdown a {
+  color: #1e3a8a;
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.appointment-dropdown a:hover {
+  background: #eff6ff;
 }

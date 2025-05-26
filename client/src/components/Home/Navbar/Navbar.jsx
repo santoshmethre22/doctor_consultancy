@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 import { useAuth } from "../../../context/user.context.jsx";
 
+
+
 const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { user, isLoggedIn, logout } = useAuth();
@@ -18,6 +20,10 @@ const Navbar = () => {
     setShowProfileMenu(!showProfileMenu);
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
   return (
     <nav className="navbar">
       <div className="navbar-logo">
@@ -29,16 +35,21 @@ const Navbar = () => {
         {/* <li><Link to="/appointments">Appointments</Link></li> */}
         <li><Link to="/about">About</Link></li>
         <li><Link to="/contact">Contact</Link></li>
-
         <li><Link to ="/dashboard">Dashboard</Link></li>
+
         
+        <li><Link to ="/appointment"> Appointments</Link></li>
+         
+
 
         {!isLoggedIn ? (
           <>
             <li><Link to="/login">Login</Link></li>
             <li><Link to="/signup" className="signup-btn">Sign Up</Link></li>
           </>
-        ) : (
+        ) : ( 
+
+
           <li className="navbar-profile" onClick={toggleProfileMenu}>
             <div className="avatar">
               {user?.avatar ? (
