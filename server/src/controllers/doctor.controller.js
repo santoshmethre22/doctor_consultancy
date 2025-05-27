@@ -141,7 +141,7 @@ const getCurrentDoctor = async (req, res) => {
   try {
     const userId = req.user?._id;
     const doctor = await Doctor.findOne({ userId }).populate("userId","-__v -password")
-    .populate("appointment","-__v");  // ✅ FIXED
+    //.populate("appointment","-__v");  // ✅ FIXED
     if (!doctor) {
       return res.status(404).json({
         message: "Doctor not found",

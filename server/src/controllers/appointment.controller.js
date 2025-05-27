@@ -126,7 +126,7 @@ export const acceptAppointment=async (req, res) => {
     if(!userId){
       return res.status(400).json({success:false,message:"User not found"})
     }
-    const { appointmentId } = req.params;
+    const { id } = req.params;
 
     const doctor=await Doctor.findOne({userId:userId});
     
@@ -134,13 +134,13 @@ export const acceptAppointment=async (req, res) => {
       return res.status(400).json({success:false,message:"Doctor not found"})
     }
 
-    if(!doctor.appointment.includes(appointmentId)){
+    if(!doctor.appointment.includes(id)){
       return res.status(403).json({success:false,message:"this appointment is not for you"})
     }
 
 
     const appointment = await Appointment.findOne({
-      _id: appointmentId,
+      _id: id,
     });
 
     if (!appointment) {
@@ -170,26 +170,25 @@ export const acceptAppointment=async (req, res) => {
   }
 
 }
+
+
 export const rejectAppointment=async (req, res) => {
   try {
-
     const userId=req.user._id;
-    const appointmentId=req.params;
-
+    const id=req.params;
    const doctor=await Doctor.findOne({userId:userId});
-    
     if(!doctor){
       return res.status(400).json({success:false,message:"Doctor not found"})
     }
 
-      if(!doctor.appointment.includes(appointmentId)){
+      if(!doctor.appointment.includes(id)){
       return res.status(403).json({success:false,message:"this appointment is not for you"})
     }
 
 
     const appointment = await Appointment.findOne({
-      _id: appointmentId,
-    });
+      _id: id,
+    }); 
 
     if (!appointment) {
       return res.status(404).json({
@@ -217,6 +216,8 @@ export const rejectAppointment=async (req, res) => {
     });
   }
 }
+
+
 // // todo :this method to implement at the last 
 // // todo: that should be like auto delete after the time 
 // // todo :this will auto 
@@ -298,32 +299,39 @@ export const getAllpendingAppointments = async (req, res) => {
 
 // todo : get all the appointmen with the doctor 
 
-// const getAllappointments=async(req,res)=>{
-//   try {
-//       const userId = req.user._id;
-//       const doctor = await Doctor.findOne({ userId: userId }).populate("appointment -__v");
-//       if (!doctor) {
-//         return res.status(400).json({
-//           success: false,
-//           message: "Doctor not found"
-//         });
-//       }
-//       if (!doctor.appointment || doctor.appointment.length === 0) {
-//         return res.status(404).json({
-//           success: false,
-//           message: "No appointments found"
-//         });
-//       }
-//       return res.status(200).json({
-//         success: true,
-//         message: "Fetched all appointments",
-//         appointments: doctor.appointment
-//       })
-//   } catch (error) {
-//     console.error("Error fetching appointments:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Server error",
-//     });
-//   }
-// }
+export const getAllDoctorappointments=async(req,res)=>{
+  try {
+      const userId = req.user._id;
+      //const user =req.user;
+      
+      const doctor = await Doctor.findOne({ userId: userId })
+      //.populate("appointment","-__v");
+      
+      if (!doctor) {
+        return res.status(400).json({
+          success: false,
+          message: "Doctor not found"
+        });
+      }
+      const appointments=await Appointment.find({doctorId:doctor._id}).populate("userId", "-__v -password");
+      
+      if (!appointments || appointments.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No appointments found"
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Fetched all appointments",
+        appointments: appointments,
+        doctor:doctor
+      })
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+}

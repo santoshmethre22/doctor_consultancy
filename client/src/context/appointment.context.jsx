@@ -55,17 +55,23 @@ const bookAppointment = async (date, time, id) => {
     }
   };
 
-  const cancelAppointment = async () => {
-    try {
-      // Implement logic
-    } catch (error) {
-      console.error("Error canceling appointment:", error);
-    }
+  const cancelAppointment = async (id) => {
+   
   };
 
-  const acceptAppointment = async () => {
+
+  const acceptAppointment = async (id) => {
     try {
       // Implement logic
+      const res=await api.patch(`/accept-appointment/${id}`);
+      if(!res.data.success){
+        toast.error(res.data.message || "Failed to accept appointment");
+        return false;
+      }
+
+
+     return res.data;
+
     } catch (error) {
       console.error("Error accepting appointment:", error);
     }
@@ -74,8 +80,15 @@ const bookAppointment = async (date, time, id) => {
   const rejectAppointment = async () => {
     try {
       // Implement logic
+      const res=await api.post(`/reject-appointment/${id}`);
+      if(!res.data.success){
+        toast.error(res.data.message || "Failed to cancel appointment");
+        return false;
+      }
+      return  res.data;
+    
     } catch (error) {
-      console.error("Error rejecting appointment:", error);
+      console.error("Error canceling appointment:", error);
     }
   };
 
@@ -119,17 +132,39 @@ const getAllPendingAppointments=async(id)=>
   }
 
 
+  const getAllDoctorAppointments = async (id) => {
+    try {
+      const res=await api.get("/get-all-appointments")
+    
+        console.log(res);
+        return res.data;
+    //  return res.data.app
+    } catch (error) {
+      
+    }
+
+  }
+
+
   return (
     <AppointmentContext.Provider
       value={{
         getAllAppointments,
         bookAppointment,
+
         cancelAppointment,
+        // todo : all these for these doctor
         acceptAppointment,
         rejectAppointment,
+
+        // todo : ---------------------->
         getTodayAppointments,
         getCompletedAppointments,
         getAllPendingAppointments,
+
+
+        // ----------------------->
+        getAllDoctorAppointments
 
       }}
     >
