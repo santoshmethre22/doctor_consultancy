@@ -24,11 +24,11 @@ function DoctorCard({_id, userId, qualification, speciality, experience, fee }) 
         consult doctor--- later implementation
       </button>
 
-      // todo : here is the mistake 
+      // todo : here is the mistake
 
-      <button onClick={()=>navigate(`/appointments/${_id}`)}> Book Appoinment</button>
+      <button onClick={()=>navigate(`/book-appointment/${_id}`)}> Book Appoinment</button>
 
-      <button onClick={()=>navigate(`/chat-interface/${userId._id}`)} >chat with doctor (implemented)</button>
+      <button onClick={()=>navigate(`/chat-interface/${userId?._id}`)} >chat with doctor (implemented)</button>
     </div>
   );
 }

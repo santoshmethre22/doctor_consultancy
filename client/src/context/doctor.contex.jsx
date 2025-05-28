@@ -71,7 +71,7 @@ export const DoctorProvider = ({ children }) => {
       const doctorData = res.data
       if (doctorData) {
         setDoctor(doctorData);
-        console.log("✅ Doctor profile fetched:", doctorData);
+      //  console.log("✅ Doctor profile fetched:", doctorData);
        // console.log("this is doctor data ", doctor);// this 
        // The console.log runs before React updates the doctor state. 
        // So it still shows the previous value (in your case, null).

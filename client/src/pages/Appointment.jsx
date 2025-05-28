@@ -1,20 +1,25 @@
 import { useState, useEffect } from "react";
 import { useAppointment } from "../context/appointment.context.jsx";
 import { toast } from "react-toastify";
+import { useDoctor } from "../context/doctor.contex.jsx";
+import { useAuth } from "../context/user.context.jsx";
 
 const Appointment = () => {
 
   // todo :here all the context 
   const { getAllDoctorAppointments,acceptAppointment , rejectAppointment} = useAppointment();
-
-
+  //const {doctor}=useDoctor();
+  const {user }=useAuth();
   // todo :  all the usestates
 
   const [allAppointments, setAllAppointments] = useState([]);
   const [pending, setPending] = useState([]);
   const [todayAppointments, setTodayAppointments] = useState([]);
   const [pastAppointments, setPastAppointments] = useState([]);
-  const [doctor, setDoctor] = useState({});
+
+
+  // const [doctor, setDoctor] = useState({});
+  const [currDoctor,setCurrDoctor]=useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -24,7 +29,7 @@ const Appointment = () => {
       try {
         const data = await getAllDoctorAppointments();
         setAllAppointments(data.appointments);
-        setDoctor(data.doctor);
+      //  setDoctor(data.doctor);
       } catch (error) {
         setError("Failed to fetch appointments.");
         console.error("Error:", error);
@@ -32,9 +37,18 @@ const Appointment = () => {
         setLoading(false);
       }
     };
-
     fetchAppointments();
   }, []);
+ // console.log(" all the appoi ",allAppointments)
+
+  useEffect(()=>{
+
+    setCurrDoctor(user)
+
+  },[])
+ // console.log(" this is the user ",user);
+ // console.log("doctor ",doctor);
+ // console.log(" curr doctor",currDoctor);
 
   // Filter Functions
   const handlePendingAppointments = () => {
@@ -74,18 +88,21 @@ const Appointment = () => {
   // Component to render a list of appointments
   const AppointmentList = ({ title, appointments }) => (
     <div>
+      {console.log(appointments)}
       <h2>{title}</h2>
       {appointments.length === 0 ? (
         <p>No appointments found.</p>
       ) : (
+
+        
+      
         appointments.map((appo) => (
           <div key={appo._id} style={{ border: "1px solid gray", padding: "10px", marginBottom: "10px" }}>
             <h3>{`Patient: ${appo.userId.name}`}</h3>
             <p>{`Date: ${new Date(appo.timing).toLocaleDateString()}`}</p>
             <p>{`Time: ${new Date(appo.timing).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</p>
             <p>{`Status: ${appo.status}`}</p>
-            <p>{`Doctor: ${doctor.name}`}</p>
-
+            <p>{`Doctor: ${currDoctor.name}`}</p>
 
             {appo.status === "pending" && (
               <>
