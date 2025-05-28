@@ -8,9 +8,6 @@ import { useAuth } from "../../../context/user.context.jsx";
 const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { user, isLoggedIn, logout } = useAuth();
-
-
-
   const handleLogout = async () => {
     await logout();
    // console.log('Successfully logged out');
@@ -21,9 +18,7 @@ const Navbar = () => {
   };
 
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleMenu = () => setIsOpen(!isOpen);
-
   return (
     <nav className="navbar">
       <div className="navbar-logo">
@@ -36,20 +31,14 @@ const Navbar = () => {
         <li><Link to="/about">About</Link></li>
         <li><Link to="/contact">Contact</Link></li>
         <li><Link to ="/dashboard">Dashboard</Link></li>
-
-        
-        <li><Link to ="/appointment"> Appointments</Link></li>
-         
-
-
+        {user?.role=="doctor"?( <li><Link to ="/appointment"> Appointments</Link></li>):(null)}
+        {user?.role=="patient"?(<li><Link to ="/user-appointment"> appointment</Link></li>):(null)}
         {!isLoggedIn ? (
           <>
             <li><Link to="/login">Login</Link></li>
             <li><Link to="/signup" className="signup-btn">Sign Up</Link></li>
           </>
         ) : ( 
-
-
           <li className="navbar-profile" onClick={toggleProfileMenu}>
             <div className="avatar">
               {user?.avatar ? (
@@ -58,7 +47,6 @@ const Navbar = () => {
                 <span>{user?.name?.charAt(0) || "S"}</span>
               )}
             </div>
-
             {showProfileMenu && (
               <div className="profile-dropdown">
                 <div className="profile-header">

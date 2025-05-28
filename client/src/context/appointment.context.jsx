@@ -42,19 +42,21 @@ const bookAppointment = async (date, time, id) => {
   }
 };
 
-// toast.success("Success message");
-// toast.error("Error message");
-// toast.warning("Warning message");
-// toast.info("Info message");
 
-  const getAllAppointments = async () => {
+  const getAllUserAppointments = async () => {
     try {
       // Implement logic
+      const res=await api.get("/get-user-appointment")
+      if(!res.data.success){
+        return false;
+      }
+      return res.data;
     } catch (error) {
       console.error("Error getting all appointments:", error);
     }
   };
 
+  
   const cancelAppointment = async (id) => {
    
   };
@@ -92,46 +94,6 @@ const bookAppointment = async (date, time, id) => {
     }
   };
 
-  const getTodayAppointments = async () => {
-    try {
-      // Implement logic
-    } catch (error) {
-      console.error("Error fetching today’s appointments:", error);
-    }
-  };
-
-  const getCompletedAppointments = async () => {
-    try {
-      // Implement logic
-    } catch (error) {
-      console.error("Error fetching completed appointments:", error);
-    }
-  };
-
-
-   // todo  :get pending appointments
-const getAllPendingAppointments=async(id)=>
-  {
-    try {
-        const res=await api.get(`/pending-appointments/${id}`)
-
-        if(!res.data.success){
-         toast.error(res.data.message || "Failed to fetch pending appointments");
-
-        } 
-       // setPending(res.data)
-
-       return res.data;
-
-    } catch (error) {
-
-
-      
-    }
-
-  }
-
-
   const getAllDoctorAppointments = async (id) => {
     try {
       const res=await api.get("/get-all-appointments")
@@ -149,20 +111,16 @@ const getAllPendingAppointments=async(id)=>
   return (
     <AppointmentContext.Provider
       value={{
-        getAllAppointments,
+        
         bookAppointment,
-
+        getAllUserAppointments,
         cancelAppointment,
         // todo : all these for these doctor
         acceptAppointment,
         rejectAppointment,
 
         // todo : ---------------------->
-        getTodayAppointments,
-        getCompletedAppointments,
-        getAllPendingAppointments,
-
-
+      
         // ----------------------->
         getAllDoctorAppointments
 

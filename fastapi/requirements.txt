@@ -1,7 +1,0 @@
-pydantic
-fastapi
-langchain[google-genai]
-langchain-core  
-langchain
-langchain-community
-langchain_utils

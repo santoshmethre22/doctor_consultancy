@@ -118,6 +118,8 @@ export const cancelAppointment = async (req, res) => {
     });
   }
 };
+
+
 export const acceptAppointment=async (req, res) => {
   
   try {
@@ -217,87 +219,7 @@ export const rejectAppointment=async (req, res) => {
   }
 }
 
-
-// // todo :this method to implement at the last 
-// // todo: that should be like auto delete after the time 
-// // todo :this will auto 
-
-
-// todo :  get all the appointemnt of today
-
-const getTodayappointment=async(req,res)=>{
-    const userId=req.user._id;
-    const doctor =await Doctor.findOne({userId:userId}).populate("appointment -__v")
-
-
-    // method to filter all the appointment here
-      const appointmens=doctor.map()
-
-
-      return  res.status(200).json({
-
-        success:true,
-        message:"fetched all the appoinments of today",
-        data:appointmens
-      })
-
-}
-
-// todo :last all the appointment with user details 
-
-const getCompletedAppointments=async(req,res)=>{
-
-
-
-}
-
-// todo : all the Appoint ment of the that where applied and to accepte or reject
-
-
-
-export const getAllpendingAppointments = async (req, res) => {
-  try {
-    const userId = req.user._id;
-
-    const doctor = await Doctor.findOne({ userId: userId });
-    if (!doctor) {
-      return res.status(400).json({
-        success: false,
-        message: "Doctor not found"
-      });
-    }
-
-    const appointments = await Appointment.find({
-      doctorId: doctor._id,
-      status: "pending"
-    }).populate("userId", "-__v -password");
-
-    if (!appointments || appointments.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No pending appointments found"
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Fetched all the pending appointments",
-      pendingAppointments: appointments
-    });
-  } catch (error) {
-    console.error("Error fetching pending appointments:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
-};
-
-
-// ------------------------------------------->
-
-
-// todo : get all the appointmen with the doctor 
+// todo : get all the appointment with the doctor 
 
 export const getAllDoctorappointments=async(req,res)=>{
   try {
@@ -333,5 +255,39 @@ export const getAllDoctorappointments=async(req,res)=>{
       success: false,
       message: "Server error",
     });
+  }
+}
+
+// todo : get all the appointment of user 
+
+export const getUserAppointment=async(req,res)=>{
+  try {
+
+    const userId=req.user._id;  
+    const appointment=await Appointment.findOne({userId});
+    if(!appication){
+      return res.status(200)
+      .json({
+        message:"No appointments found",
+        statu:false,
+      })
+    }
+
+      return res.status(400)
+      .json({
+        message:"appointment fetched successfully",
+        success:true,
+        data:appointment
+      })
+    
+  } catch (error) {
+
+    return res.status(500)
+    .json({
+      message:" server error",
+      success:false,
+
+    })
+    
   }
 }

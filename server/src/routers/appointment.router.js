@@ -6,9 +6,9 @@ import {
    acceptAppointment,
    rejectAppointment,
    cancelAppointment,
-   getAllpendingAppointments,
-   getAllDoctorappointments
    
+   getAllDoctorappointments,
+   getUserAppointment
 
 } from "../controllers/appointment.controller.js"
 
@@ -21,26 +21,14 @@ const router =Router();
 router.patch("/accept-appointment/:id",verifyJWT,acceptAppointment);
 router.post("/reject-appointment/:id",verifyJWT,rejectAppointment);
 
-
-router.get("/pending-appointments/:id",verifyJWT,getAllpendingAppointments);
-
-// todo :  get all the appointemnt of today
-// todo :last all the appointment with user details 
-// todo : all the Appoint ment of the that where applied 
-
-
-
-
 // todo :user 
 router.post("/book-appointment/:id",verifyJWT,BookAppointMent);
 router.post("/cancel-appointment",verifyJWT,cancelAppointment);
+router.get("/get-user-appointment",verifyJWT,getUserAppointment)
+
 
 // todo : get all the appointmen with the doctor
-
-
 router.get("/get-all-appointments",verifyJWT,getAllDoctorappointments);
-
-
 
 
 export default router
