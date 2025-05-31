@@ -260,34 +260,29 @@ export const getAllDoctorappointments=async(req,res)=>{
 
 // todo : get all the appointment of user 
 
-export const getUserAppointment=async(req,res)=>{
+export const getUserAppointment = async (req, res) => {
   try {
+    const userId = req.user._id;
+    const appointments = await Appointment.find({ userId });
 
-    const userId=req.user._id;  
-    const appointment=await Appointment.findOne({userId});
-    if(!appication){
-      return res.status(200)
-      .json({
-        message:"No appointments found",
-        statu:false,
-      })
+    if (!appointments || appointments.length === 0) {
+      return res.status(200).json({
+        message: "No appointments found",
+        success: false,
+        data: []
+      });
     }
 
-      return res.status(400)
-      .json({
-        message:"appointment fetched successfully",
-        success:true,
-        data:appointment
-      })
-    
+    return res.status(200).json({
+      message: "Appointments fetched successfully",
+      success: true,
+      data: appointments
+    });
   } catch (error) {
-
-    return res.status(500)
-    .json({
-      message:" server error",
-      success:false,
-
-    })
-    
+    console.error("Error in getUserAppointment:", error);
+    return res.status(500).json({
+      message: "Server error",
+      success: false,
+    });
   }
-}
+};

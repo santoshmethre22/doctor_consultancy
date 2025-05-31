@@ -1,153 +1,53 @@
 import Hospital from "../models/hospital.model.js";
+import sendEmail from "../utils/nodemailer.js";
 
 
-//todo : here a user can apply for the register to his hospistal 
-
-const registerHospital=async()=>{
+const addHospital=async(req,res)=>{
     try {
-        const {name,email,location}=req.body
-        const userId=req.user._id;
-
-        if(!userId){
-           return res.status(404).json({
-                message:"please login ",
-                success:false
-
-            })
-        }
-
-        const hospital=await Hospital.create({
-            name,
-            email,
-            location
-        })
-
-
-        if(!hospital){
-          return  res.status(403).json({
-                message:"somthing went wrong in backend",
+        const userId =req.user._id;
+        const {name,email,location}=req.body();
+        if(!name||!email||!location){
+            return res.status(404)
+            .json({
+                message:"all the details required",
                 success:false
             })
-        }
 
-        return res.status(404).json({
-            message:"hopital registered successfully",
-            success:true,
-            data:hospital
-        })
-        
-    } catch (error) {
-        
-        return res.status(403).json({
-            message:error.message,
-            success:false
-        })
-
-    }
-
-}
-
-
-
-const getAllHospitals=async()=>{
-
-try {
-    
-            const hospital=await Hospital.find()
-            .populate("doctors")
-    
-    
-            if(!hospital){
-                return { message: "No hospitals found" };
-            }
-    
-    
-            res.status(200).json({
-                message:" the deatils of all the hospitals are found "
-            })
-    
-} catch (error) {
-    console.error(error);
-    return { message: "An error occurred while fetching hospitals", error: error.message };
-}
-
-}
-
-
-const hospitalDoctor=async()=>{
- const hospitalId=req.params
-        const {hospital}=await Hospital.findById(hospitalId)
-        .populate("docoterId -__v")
-        if(!hospital){
-            return res.status(404).json({ message: "Hospital not found" });
-        }
-
-}
-
-
-const updateHostpital=async()=>{
-    try {
-
-
-        
-    } catch (error) {
-        
-    }
-
-
-
-}
-
-const getMyHospital=async()=>{
-
-       try {
-         const hospitalId=req.user._id
-
-
-         const hospital=await Hospital.findById(hospitalId)
-         .populate("applications")
-         .populate("doctors")
-         .populate("patients")
-
-
-         if(!hospital){
+            const otp=Math.floor(100000 + Math.random() * 900000).toString();
+            const otpExpiry=new Date(Date.now()+10 * 60 * 1000)
             
-         }
- 
-         
-       } catch (error) {
-        
-       }
 
-}
+            
+
+            const hospital= await Hospital.create({
+                name,
+                email,
+                location,
+                otp,
+                otpExpiry
+                    })
+
+            if(!hospital){
+                return res.status(404).json({
+                    message:"hospital not created ",
+                    success:false
+                })            
+            
+            }
+
+            await hospital.save();
+            await sendEmail(email, "OTP Verification", `Your OTP is: ${otp}`)
+
+            return res.status(200)
+            .json({
+                message:"registration completed ",
+                success:true,
+            })
+        }
 
 
-const postJobs=async()=>{
-    try {
-        
     } catch (error) {
         
     }
-}
-
-const accept=async()=>{
-    try {
-        
-    } catch (error) {
-        
-    }
 
 }
-
-const reject =async()=>{
-    try {
-
-
-        
-    } catch (error) {
-        
-    }
-}
-
-
-

@@ -13,7 +13,7 @@ import Dashboard from './components/Dashboard/Dashboard.jsx';
 import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
 import Appointment from './pages/Appointment.jsx';
 import BookAppointment from './pages/BookAppointment.jsx';
-
+import Booked from './pages/Booked.jsx';
 
 function App() {
   return (
@@ -35,7 +35,8 @@ function App() {
             // todo : add the take appointment for id here
             <Route path='/book-appointment/:id' element={<BookAppointment />} />
             <Route path='/appointment' element={<Appointment />} />
-          {/* <Route path='/options' element={<Options />} /> */}    
+          {/* <Route path='/options' element={<Options />} /> */}  
+          <Route path='/user-appointment' element={<Booked />} />  
           </Routes>
             </AppointmentProvider>
          </DoctorProvider>

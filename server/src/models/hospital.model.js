@@ -16,7 +16,8 @@ const hospitalSchema = new mongoose.Schema({
 
     email: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
 
 
@@ -39,9 +40,15 @@ const hospitalSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    about:{
-        type:String,
+
+    document:{
+        type:String,    
     },
+   
+
+    otp: String,
+  otpExpiry: Date,
+  isVerified: { type: Boolean, default: false },
 
 
     blog:{
