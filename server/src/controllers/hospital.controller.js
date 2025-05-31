@@ -49,4 +49,39 @@ const addHospital = async (req, res) => {
     }
 };
 
-export default addHospital;
+const verify=async(req,res)=>{
+    try {
+    const { email, otp } = req.body;
+    const hospital = await Hospital.findOne({ email });
+
+  if (!hospital) {
+    return res.status(400).json({ message: "Hospital not found" });
+  }
+
+  if (hospital.otp !== otp || hospital.otpExpiry < Date.now()) {
+    return res.status(400).json({ message: "Invalid or expired OTP" });
+  }
+
+  hospital.isVerified = true;
+  hospital.otp = null;
+  hospital.otpExpiry = null;
+  await hospital.save();
+  res.json({ message: "Email verified successfully" });
+        
+
+    } catch (error) {
+            return res.status(404)
+            .json({
+                message:"not verified",
+                success:false
+            })
+
+    }
+}
+
+export  {
+    
+    addHospital,
+    verify
+
+};
