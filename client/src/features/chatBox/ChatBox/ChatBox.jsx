@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./ChatBox.css";
 
 export default function ChatBox() {
@@ -7,10 +7,30 @@ export default function ChatBox() {
     { sender: "Me", text: "Hello!" },
   ]);
   const [input, setInput] = useState("");
+  const messagesEndRef = useRef(null);
 
-  const handleSend = () => {
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSend = async () => {
     if (input.trim()) {
       setMessages([...messages, { sender: "Me", text: input }]);
+      try {
+        const response = await fetch('http://localhost:8001/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: input }),
+        });
+        const data = await response.json();
+        setMessages(prev => [...prev, { sender: "Bot", text: data.response }]);
+      } catch (error) {
+        setMessages(prev => [...prev, { sender: "Bot", text: "Sorry, I couldn't reply." }]);
+      }
       setInput("");
     }
   };
@@ -25,6 +45,7 @@ export default function ChatBox() {
             {msg.text}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="chat-input">
