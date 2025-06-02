@@ -6,9 +6,10 @@ import "./Home.css";
 
 import HeroSection from "./Hero/HeroSection.jsx";
 
-
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+    const navigate = useNavigate();;
   return (
     <div className="home-container">
       {/* Include Navbar */}
@@ -43,6 +44,14 @@ const HomePage = () => {
           <div className="feature-card">
             <h3>Appointment Booking</h3>
             <p>Book appointments with your preferred doctors easily through the app.</p>
+            
+          </div>
+          <div className="feature-card">
+            <h3>chat with achary</h3>
+           <p> let chat with out Acharya
+             <button className="hero-button" onClick={()=>navigate("/chat-gemini")}>chat Acharya</button></p>
+        
+            
           </div>
         </div>
       </section>

@@ -1,7 +1,9 @@
 import React from "react";
+ // ✅ Correct import
 import "./HeroSection.css"; // CSS file for styling
 
 const HeroSection = () => {
+ // ✅ Correct function usage
   return (
     <section className="hero-section">
       <div className="hero-content">
@@ -10,7 +12,7 @@ const HeroSection = () => {
           Book appointments, get prescriptions, and connect with trusted
           healthcare professionals online.
         </p>
-        <button className="hero-button">Book a Consultation</button>
+       
       </div>
       <div className="hero-image">
         <img
