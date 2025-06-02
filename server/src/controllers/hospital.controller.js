@@ -1,10 +1,14 @@
 import Hospital from "../models/hospital.model.js";
+import User from "../models/user.model.js";
 import sendEmail from "../utils/nodemailer.js";
 
 const addHospital = async (req, res) => {
     try {
         const userId = req.user._id; // You might want to use this later for access control or reference
         const { name, email, location } = req.body;
+
+        const user=await User.findById(userId);
+        
 
         if (!name || !email || !location) {
             return res.status(400).json({
@@ -14,24 +18,30 @@ const addHospital = async (req, res) => {
         }
 
         // Check if hospital with this email already exists
-        const existingHospital = await Hospital.findOne({ email });
-        if (existingHospital) {
-            return res.status(400).json({
-                message: "A hospital with this email already exists.",
-                success: false,
-            });
-        }
-
+        
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+        const existingHospital = await Hospital.findOne({ email });
+        if (existingHospital) {
+           existingHospital.otp=otp;
+           existingHospital.otpExpiry=otpExpiry
+           await existingHospital.save();
+        }
+        else {
+            
+            const hospital = await Hospital.create({
+                name,
+                email,
+                location,
+                otp,
+                otpExpiry,
+            });
 
-        const hospital = await Hospital.create({
-            name,
-            email,
-            location,
-            otp,
-            otpExpiry,
-        });
+         user.hospital=hospital._id;
+
+         await user.save();
+        }
+
 
         await sendEmail(email, "OTP Verification", `Your OTP is: ${otp}`);
 
@@ -49,7 +59,7 @@ const addHospital = async (req, res) => {
     }
 };
 
-const verify=async(req,res)=>{
+const verifyHospital=async(req,res)=>{
     try {
     const { email, otp } = req.body;
     const hospital = await Hospital.findOne({ email });
@@ -82,6 +92,6 @@ const verify=async(req,res)=>{
 export  {
     
     addHospital,
-    verify
+    verifyHospital
 
 };

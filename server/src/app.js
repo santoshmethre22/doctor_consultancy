@@ -20,12 +20,12 @@ app.use(cookieParser());
 import userRouter from "./routers/user.routers.js";
 import appointmentRouter from "./routers/appointment.router.js"
 import doctorRouter from "./routers/doctor.router.js"
-
-
+import hostpitalRouter from "./routers/hospital.router.js"
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/doctor", doctorRouter);
 app.use("/api/v1/appointment",appointmentRouter)
+app.use("/api/v1/hospital",hostpitalRouter);
 // Default route
 
 export { app };
