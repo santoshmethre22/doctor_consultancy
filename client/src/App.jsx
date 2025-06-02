@@ -10,10 +10,11 @@ import Login from './components/Auth/Login.jsx';
 import HomePage from './components/Home/Home.jsx';
 import Profile from './Profile/Profile.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
-import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
+//import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
 import Appointment from './pages/Appointment.jsx';
 import BookAppointment from './pages/BookAppointment.jsx';
 import Booked from './pages/Booked.jsx';
+import ChatGemini from './features/chat/ChatGemini.jsx';
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/chat-interface/:id' element={<ChatDashBoard />} />
+       {/* <Route path='/chat-interface/:id' element={<ChatDashBoard />} /> */}
 
             {/* Add more routes here */}
             {/* add the appointment rout here*/}
@@ -37,6 +38,7 @@ function App() {
             <Route path='/appointment' element={<Appointment />} />
           {/* <Route path='/options' element={<Options />} /> */}  
           <Route path='/user-appointment' element={<Booked />} />  
+          <Route path='/chat-gemini' element={<ChatGemini />} />
           </Routes>
             </AppointmentProvider>
          </DoctorProvider>
