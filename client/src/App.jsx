@@ -16,11 +16,16 @@ import BookAppointment from './pages/BookAppointment.jsx';
 import Booked from './pages/Booked.jsx';
 import ChatGemini from './features/chat/ChatGemini.jsx';
 
+import Socket from "./features/chat/socket.io/Socket.jsx"
+import AddHospital from './components/Hospital/addHospital/AddHospital.jsx';
+import { HospitalProvider } from './context/hospital.contex.jsx';
 function App() {
   return (
+    
     <div className="App">
       <Router> {/* ✅ Router wraps everything */}
         <AuthProvider> {/* ✅ Wraps Routes, NOT inside Routes */}
+          <HospitalProvider >  
           <DoctorProvider>
             <AppointmentProvider>
           <Routes> {/* ✅ Only one Routes wrapper */}
@@ -30,7 +35,6 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path='/dashboard' element={<Dashboard />} />
        {/* <Route path='/chat-interface/:id' element={<ChatDashBoard />} /> */}
-
             {/* Add more routes here */}
             {/* add the appointment rout here*/}
             // todo : add the take appointment for id here
@@ -38,11 +42,15 @@ function App() {
             <Route path='/appointment' element={<Appointment />} />
           {/* <Route path='/options' element={<Options />} /> */}  
           <Route path='/user-appointment' element={<Booked />} />  
+          <Route path='/socket-io' element={<Socket />} />
           <Route path='/chat-gemini' element={<ChatGemini />} />
+          { /* add here the hopital router */}
+
+          <Route path='/add-hospital' element={<AddHospital />} />
           </Routes>
             </AppointmentProvider>
          </DoctorProvider>
-
+</HospitalProvider>
         </AuthProvider>
       </Router>
     </div>

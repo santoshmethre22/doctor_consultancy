@@ -32,6 +32,9 @@ const HomePage = () => {
       {/* Features Section */}
       <section className="features">
         <h2>Our Key Features</h2>
+
+        <h3> add Hospital</h3>
+        <div> <button> add hospital</button></div>
         <div className="feature-cards">
           <div className="feature-card">
             <h3>Consult Doctors</h3>
