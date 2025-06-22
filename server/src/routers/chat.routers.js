@@ -6,4 +6,7 @@ const router =Router();
 
 router.post("/chat-gemini",chatmodel);
 
+
+// for the socket.io connection
+
 export default router;

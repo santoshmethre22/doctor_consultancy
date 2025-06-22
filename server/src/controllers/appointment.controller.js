@@ -84,13 +84,15 @@ export const BookAppointMent = async (req, res) => {
   }
 };
 
+
+// todo : to implement frontend------>
 export const cancelAppointment = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { appointmentId } = req.params;
+    const { id } = req.params; // ✅ Change this line
 
     const appointment = await Appointment.findOne({
-      _id: appointmentId,
+      _id: id, // ✅ Use 'id' instead of appointmentId
       userId: userId,
     });
 
@@ -109,8 +111,7 @@ export const cancelAppointment = async (req, res) => {
       message: "Appointment cancelled",
       appointment,
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.error("Cancel Error:", error);
     return res.status(500).json({
       success: false,
@@ -118,6 +119,7 @@ export const cancelAppointment = async (req, res) => {
     });
   }
 };
+
 
 
 export const acceptAppointment=async (req, res) => {

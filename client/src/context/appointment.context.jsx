@@ -56,11 +56,24 @@ const bookAppointment = async (date, time, id) => {
     }
   };
 
-  
+  // this is to cancel appointment 
   const cancelAppointment = async (id) => {
-   
-  };
+  try {
+    const res = await api.patch(`/cancel-appointment/${id}`);
 
+    if (!res?.data?.success) {
+      alert("Unable to cancel appointment.");
+      return res; // Still return in case caller wants to handle it
+    }
+
+    return res;
+  } catch (error) {
+    console.error("Error in cancelAppointment:", error);
+    return { data: { success: false } }; // Return fallback response
+  }
+};
+
+  // ---------------------------------------------------->
 
   const acceptAppointment = async (id) => {
     try {
@@ -111,19 +124,15 @@ const bookAppointment = async (date, time, id) => {
   return (
     <AppointmentContext.Provider
       value={{
-        
         bookAppointment,
         getAllUserAppointments,
         cancelAppointment,
         // todo : all these for these doctor
         acceptAppointment,
         rejectAppointment,
-
         // todo : ---------------------->
-      
         // ----------------------->
         getAllDoctorAppointments
-
       }}
     >
       {children}

@@ -13,12 +13,15 @@ import Dashboard from './components/Dashboard/Dashboard.jsx';
 //import ChatDashBoard from './features/chatBox/ChatDashBoard.jsx';
 import Appointment from './pages/Appointment.jsx';
 import BookAppointment from './pages/BookAppointment.jsx';
-import Booked from './pages/Booked.jsx';
+import Booked from './pages/BookedUserAppointments.jsx';
 import ChatGemini from './features/chat/ChatGemini.jsx';
 
 import Socket from "./features/chat/socket.io/Socket.jsx"
 import AddHospital from './components/Hospital/addHospital/AddHospital.jsx';
 import { HospitalProvider } from './context/hospital.contex.jsx';
+import HospitalDashboard from './components/Hospital/HospitalDashboard/HospitalDashboard.jsx';
+
+
 function App() {
   return (
     
@@ -42,11 +45,12 @@ function App() {
             <Route path='/appointment' element={<Appointment />} />
           {/* <Route path='/options' element={<Options />} /> */}  
           <Route path='/user-appointment' element={<Booked />} />  
-          <Route path='/socket-io' element={<Socket />} />
+          {/* <Route path='/socket-io' element={<Socket />} /> */}
           <Route path='/chat-gemini' element={<ChatGemini />} />
           { /* add here the hopital router */}
 
           <Route path='/add-hospital' element={<AddHospital />} />
+          <Route path='/hospital' element={<HospitalDashboard />} />
           </Routes>
             </AppointmentProvider>
          </DoctorProvider>

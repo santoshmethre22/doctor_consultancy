@@ -6,7 +6,6 @@ import {
    acceptAppointment,
    rejectAppointment,
    cancelAppointment,
-   
    getAllDoctorappointments,
    getUserAppointment
 
@@ -22,9 +21,9 @@ router.patch("/accept-appointment/:id",verifyJWT,acceptAppointment);
 router.post("/reject-appointment/:id",verifyJWT,rejectAppointment);
 
 // todo :user 
-router.post("/book-appointment/:id",verifyJWT,BookAppointMent);
-router.post("/cancel-appointment",verifyJWT,cancelAppointment);
-router.get("/get-user-appointment",verifyJWT,getUserAppointment)
+router.post("/book-appointment/:id",verifyJWT,BookAppointMent);// here id is doctorid;
+router.patch("/cancel-appointment/:id",verifyJWT,cancelAppointment);// here id is appointment id;
+router.get("/get-user-appointment",verifyJWT,getUserAppointment);
 
 
 // todo : get all the appointmen with the doctor

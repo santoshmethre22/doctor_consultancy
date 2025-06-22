@@ -3,8 +3,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 // import server from "./utils/socket.io.js";
 
+// import { app } from "./utils/socket.io.js";
 
 const app = express();
+
 
 app.use(cors({
   origin: process.env.CORS_ORIGIN,
@@ -31,7 +33,6 @@ app.use("/api/v1/appointment",appointmentRouter)
 app.use("/api/v1/hospital",hostpitalRouter);
 app.use("/api/v1/chat",chatRouter);
 // Default route
-
 
 
 export { app };
