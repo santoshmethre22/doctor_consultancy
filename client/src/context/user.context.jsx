@@ -11,11 +11,17 @@ const api = axios.create({
   withCredentials: true,
 });
 
+
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  const [online,setOnline]=useState({})
+  const [socket,setSocket]=useState(null);
 
   // Register
   const register = async (userData) => {
@@ -43,6 +49,7 @@ export const AuthProvider = ({ children }) => {
       setUser(data.user);
       setIsLoggedIn(true);
 
+      connectSocket();
       console.log("✅ Login successful:", data.user);
 
       console.log(" the user is ",user);
@@ -61,6 +68,7 @@ export const AuthProvider = ({ children }) => {
       await api.post('/api/v1/user/logout');
       setUser(null);
       setIsLoggedIn(false);
+      disconnectSocket();
       return { success: true };
     } catch (error) {
       console.error('❌ Logout error:', error);
@@ -143,6 +151,43 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
+
+
+  const connectSocket=()=>{
+    try {
+      if(!user|| socket.connecte()) return;
+      const socket=io(BASE_URL,{
+        query:{
+          userId:user._id
+        }
+      })
+      socket.connect();
+      setSocket({socket:socket});
+      //todo: here the method for the online users 
+
+
+      // todo : method to disconnect
+        socket.on("disconnect",()=>{
+          
+        })
+      
+    } catch (error) {
+
+      console.log("error while connection ",error?.message)
+      
+    }
+
+  }
+ 
+
+  const  disconnectSocket=() => {
+
+    if(socket.connected()){
+      socket.disconnect();
+    }
+    // if (get().socket?.connected) get().socket.disconnect();
+  }
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -153,6 +198,10 @@ export const AuthProvider = ({ children }) => {
       logout,
       photoUpload,
       updateDetails,
+
+      socket,
+      connectSocket,
+      disconnectSocket
     }}>
       {children}
     </AuthContext.Provider>

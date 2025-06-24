@@ -47,10 +47,14 @@ function App() {
           <Route path='/user-appointment' element={<Booked />} />  
           {/* <Route path='/socket-io' element={<Socket />} /> */}
           <Route path='/chat-gemini' element={<ChatGemini />} />
+          
+          
           { /* add here the hopital router */}
 
           <Route path='/add-hospital' element={<AddHospital />} />
           <Route path='/hospital' element={<HospitalDashboard />} />
+
+          <Route path='/socket-chat' element={<Socket />} />
           </Routes>
             </AppointmentProvider>
          </DoctorProvider>

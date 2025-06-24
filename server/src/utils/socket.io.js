@@ -150,11 +150,27 @@ const io =new Server(server,{
   }
 })
 
+// online users 
 
+const userSocket={};
 
 io.on("connection", (socket) => {
 
     console.log("user conected :",socket.id);
+
+
+    const email=socket.handshake.query.email;
+    if(email){
+        userSocket[email]=socket.id;
+    }
+
+
+    // io.emit() is used to send events to all the connected clients
+
+    // todo :implement getonlineusers here--------------------
+    io.emit("getOnlineUsers", Object.keys(userSocket));
+
+    
 
     // here for public message 
     // todo : create a method in the frontend end 
@@ -166,10 +182,16 @@ io.on("connection", (socket) => {
     })
 
     // here are for the private massage
-    socket.on("private_message",({to ,message})=>{
-        console.log("Private message from", socket.id, "to", to, ":", message);
+    socket.on("private_message",({email ,message})=>{
+
+        // first take his socket id by email
+        const recieverId =userSocket[email];
+
+        // save the message of the to the data base 
+
+        console.log("Private message from", socket.id, "to", recieverId, ":", message);
         // Send the private message to the specified recipient
-        socket.to(to).emit("private_message", { from: socket.id, message });
+        socket.to(recieverId).emit("private_message", { from: socket.id, message });
 
     })
 
@@ -186,6 +208,13 @@ io.on("connection", (socket) => {
         console.log(`${socket.id} left room: ${room}`);
     })
 
+
+
+    socket.on("disconnect", () => {
+    console.log("A user disconnected", socket.id);
+    delete userSocket[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocket));
+  });
 })
 
 

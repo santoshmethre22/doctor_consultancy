@@ -1,0 +1,16 @@
+.chat-app {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .chat-app {
+    flex-direction: column;
+  }
+}
